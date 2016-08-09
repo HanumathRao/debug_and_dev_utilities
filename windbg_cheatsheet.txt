@@ -1,0 +1,331 @@
+-----------------------------------------------------------------------------------  INSTALLATION
+  DOWNLOAD / INSTALL
+
+Dowmload Windows SDK , install it , choose only Windbg  OR applicationVerifier
+https://dev.windows.com/en-us/downloads/windows-10-sdk
+
+----------------------------------------------------------------------------------- COMMANDS
+
+Command types : 1) regular    K
+                2) meta/dot commands  to control behaviour of windbg -> .cls .time .reload
+                3) extension commands  !analyze !locks !teb !peb
+                
+.cls    clear screen
+
+You can save commands :
+
+use .logopen , all of the commands you input and response from windbg will be logged, and then use .logclose to flush the data into
+
+----------------------------------------------------------------------------------- DEBUGGING 32 BIT ON 64 BIT
+	  
+If you are debugging 32 bit on 64 bit machine you have to type :
+
+.effmach x86
+
+Also if you debug with wrong version of windbg : you will get the error below :
+
+"Could not attache to process <pid>, NTSTATUS 0xC00000BB The request is not supported."
+
+----------------------------------------------------------------------------------- SOURCE MODE
+
+Simply in windbg , enter locations for source files , and during debugging it should bring it up
+
+Also in the call stack window, you can switch to source code
+
+----------------------------------------------------------------------------------- USING NATVIS FILES 
+
+This is supported starting from Win10 DDK :
+https://msdn.microsoft.com/en-us/library/windows/hardware/mt219728%28v=vs.85%29.aspx
+
+----------------------------------------------------------------------------------- SYMBOLS, MODULES, ATTACHING
+- F6	shortcut for attaching
+
+- You can attach to Windows services
+
+- Automated attachment : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
+
+- Symbol path and source path are only stored in the workspaces or you can enter them with .srcpath and .sympath commands
+
+- Public vs Private symbol : public symbols have functions , global variables as externs
+							 private = public + local vars, address of their entry points , frame pointer omission records
+- Symbol servers : Ctrl S and then enter
+                  
+				   SRV*c:\symsrv*http://msdl.microsoft.com/download/symbols
+                              
+                   that will download symbols to c:\symsrv
+                            
+- !sym noisy : display error information when loading symbols
+                              
+- After starting/attaching the debuggee , execute : .reload /f /v /o
+                                
+- .sympath  shows local symbol path
+								
+- lm shows loaded modules
+								
+- _NT_SYMBOL_PATH environment variable : Both Windbg and VS search symbols looks for this environment variable first
+Example value : symsrv*symsrv.dll*C:\WindowsSymbols*http://msdl.microsoft.com/download/symbols
+
+- By default symbol loading is deferred to force it by using the ld (Load Symbols) command or the .reload (Reload Module) command with the /f option.
+
+- How to list all symbols in a module : x module!*
+	  
+----------------------------------------------------------------------------------- BREAKPOINTS AND STEPPING
+
+Symbols are deferred, to put breakpoint at the beginning 
+
+			lm -> to check if deferred or not for your module
+
+If no deferred modules, then 
+				
+			ld your_module_name to verify if it can be found
+
+then to create a breakpoint :
+
+	bp yourmodule!yourfunction_signature
+
+Or just open the source file and press F9
+
+bl lists all breakpoints or press alt F9
+
+bc * : Clear all breakpoints.
+bc number : Clear breakpoint identified by number.
+be number : Enable breakpoint identified by number.
+bd number : Disable breakpoint identified by number.
+
+p : Step over.
+t : Step in.  OR just F10 and F11
+
+pc : Step to next CALL instruction.
+pt – Steps through until the next return instruction.
+
+g continue
+
+CONDITIONAL  BREAKPOINTS : Press Alt-F9 which brings up a easy to use dialog 
+Simply say "Enable" for a bp , and then write the condition
+
+Deleting all breakpoints : Alt f9 and then delete them
+
+----------------------------------------------------------------------------------- first chance exceptions / 2nd chance exceptions
+
+First chance exception gives the debugger a first chance to inspect the exception and 
+application state before the application handles the exception.
+
+It doesn`t mean that the program would crash if you continued. Because it might be the case 
+that the programmer handled he exception
+
+The debugger gets a second chance at the exception when the application doesn't handle it. 
+Again, you can break into the debugger here (this isusually on by default).
+
+A second chance exception means that your process did not handle an exception and your software is going to crash.
+
+----------------------------------------------------------------------------------- HOW TO PUT BREAKPOINTS TO WINDOWS API CALLS
+
+Just same way like bp module!function :
+			
+			bp ntdll!NtWaitForSinleObject*
+
+(Since there is A W versions use * at the end like this )
+
+			bp kernel32!LoadLib*
+			
+----------------------------------------------------------------------------------- HOW TO BREAK WHEN A MODULE LOADED
+
+Break on module load :
+
+			sxe ld IMM32.DLL ( hacky way places an exception sx means set exception )
+
+----------------------------------------------------------------------------------- HARDWARE BREAKPOINTS / MEMORY Breakpoint
+
+- 64 bit not supported 
+- Break on Access  :
+
+		ba e 1 00453689 
+
+- Command e is type. It can be one of this execute read write etc
+
+e (execute) Breaks into the debugger when the CPU retrieves an instruction from the specified address.
+r (read/write) Breaks into the debugger when the CPU reads or writes at the specified address.
+w (write) Breaks into the debugger when the CPU writes at the specified address.
+
+- To automate it , press Alt-F9 , and in any breakpoint enter a command like :
+	
+	ba r4 myVariable
+
+----------------------------------------------------------------------------------- HOW TO VIEW FUNCTION ARGUMENTS
+
+In views , you have call stack windows and you have functions windows.
+If symbols are loaded you can see things in watch window/locals windows 
+or 
+after seeing addresses of args passed to the function , you can do :
+	
+	du address to see it
+	
+or open Memory Windows and simply enter the address
+      
+----------------------------------------------------------------------------------- CALL STACKS
+
+~  all threads and their stacks
+~*k -> show all stacks (native and managed )
+.frame to switch between the entries on the call stack
+
+k : Display call stack.
+– kn : Display call stack with frame numbers.
+
+----------------------------------------------------------------------------------- THREADS AND LOCKS
+- ~  displays all thread info
+- ~2 switch to thread with ID 2
+- ~2s     Change context switch to 2nd thread
+- After switching to a thread you enter kn ( ex k5 k10 ... ) to see its stack
+- !threads   	all threads
+- !runaway  	cpu time of each thread ( which thread is consuming the CPU? )
+- !locks show all locks
+----------------------------------------------------------------------------------- DEBUG MEMORY : EXTRACTION AND EDITING and SEARCHING
+DUMPING MEMORY :
+
+	!dso ->Dump stack objects
+	!do   dump objects
+	!da   dump arrays
+	dt structName 0xaddress - display a structure in proper format if you have symbols
+
+EDITING MEMORY :
+
+e[d|w|b] 0xaddress newbytes     - edit memory
+
+SEARCHING MEMORY :
+s searches memory
+
+----------------------------------------------------------------------------------- SYSTEM MEMORY - VMEMORY AND HEAP
+                
+!vadump	dump list of memory pages and info
+!address -summary	Show summery of memory by types
+!heap -s	Show all heaps
+!heap -stat -h <heap addr>	Show blocks of specific heap
+!heap -flt s <block size>	Show addresses of memory blocks of specific size by heap
+!heap -p -a <usrPtr>	Display allocation call stack for given block user ptr address
+
+Memory leak finding process :
+	Approach 1 : FIND OUT HEAP GROWING POINTS 
+			
+			!heap -s  , DISPLAYS HEAPS WITH SIZES
+
+	Leak the memory then !heap -s again , spot the size diff ,
+	Finally :
+	
+	!heap -stat -h 00330000 ( 0030000 is the growing heap ) gives you call stacksdoing that
+	then the rest is resolving address :
+	http://www.codeproject.com/Articles/31382/Memory-Leak-Detection-Using-Windbg
+ 
+
+	Approach 2 : You can use CRT debug heap which will require you to recompile
+	and Windbg will show CRT debug info at that point :
+
+	Detected memory leaks!
+	Dumping objects ->
+	{80} normal block at 0x003B4378, 8000 bytes long.
+	Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+	{79} normal block at 0x003B3F50, 1000 bytes long.
+	Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+	Object dump complete.
+	At WinDBG, we can trace down the originating functions
+
+	000:0> !heap -p -a 0x003B4378
+
+Catching page faults for performance : http://www.codeproject.com/Articles/186230/Extending-windbg-with-Page-Fault-Breakpoints
+
+----------------------------------------------------------------------------------- MISC 
+
+!teb        dump thread environment block
+!peb        dump process environment block
+!gle		get last error
+!comcalls   Show COM calls on all threads
+!handles  	all handles
+.ecxr 		will switch to the context frame of the exception that occurred
+!analyze -v , analyzes the exception
+
+----------------------------------------------------------------------------------- HANG ANALYSIS
+
+1. run !analyze -hang -v      
+
+	The first thing you will see will be  80000003 (Break instruction exception , first chance exception) 
+	At the end , it will show you the thread and its stack which is hung
+                               
+2. type ~ to see all threads , here you can see ID of your thread
+	
+3. ~ns  , will switch to thread n , just use the one you just found
+                               
+4. In Windbg UI : View -> Callstack
+
+					OR 
+   After switching to the thread you want to see, to dislay the stack frame :
+   kn to see its stack  
+
+   Then finally switch to related stack frame :  .frame n ( .frame 0 for the newest frame) 
+                              
+----------------------------------------------------------------------------------- CRASH DUMP ANALYSIS 
+
+!analyze -v  analyzes the exceptions occured. It directly pinpoints you the crash point
+
+----------------------------------------------------------------------------------- DUMP FILES , HOW TO CREATE
+In user mode , there is 2 types :
+			1) full dumps
+			2) mini dumps
+			
+Full memory dump files. These files contain the contents of virtual memory for a process. 
+These files are the most useful when you are troubleshooting unknown issues. A support engineer 
+can use these files to look anywhere in memory to locate any object, pull up the variable that 
+was loaded on any call stack, and disassemble code to help diagnose the problem. The disadvantage 
+of full memory dump files is that they are large. It also may take additional time to collect these 
+files, and the process that is being recorded must be frozen while the dump file is created.
+
+Mini memory dump files. A mini dump file is more configurable than a full dump file and can range from only 
+several megabytes (MB) up to the size of a full dump file. The size differs because of the amount of virtual 
+memory that the debugger is writing to disk. Although you can gather mini memory dump files quickly and they are small, 
+they also have a disadvantage. Mini dump files may contain much less information than full dump files. 
+The information that a mini dump file gathers may be virtually useless to a support engineer 
+if the area of memory that the support engineer has to troubleshoot was not captured. 
+For example, if the heap memory is not written to the memory dump file, a support engineer cannot examine the contents 
+of a message that was being processed at the time that the problem occurred. Useful information, such as the subject line and the recipient list, would be lost.
+
+How to create them with process explorer : 
+http://blogs.msdn.com/b/msdnts/archive/2006/11/24/how-to-debug-application-crash-hang-in-production-environment.aspx
+
+How to create them programtically : In Windows API , there is MiniDumpWriteDump function
+
+How to analyze crash dumps quickly :
+
+	1. set your sympath , symserver , and place your symbols
+	2. load symbols : .reload /force
+	3. k for seeing call stack
+	4. .ecxr for exception details
+
+----------------------------------------------------------------------------------- REMOTE DEBUGGING 
+
+For user mode servers, you have to run Dbgsrv.exe  in the remote server :
+
+1. On the debugging target enter
+
+ <path to debugging tools>\dbgsrv -t tcp:port=<localport>
+ 
+2. On client : 
+      Connect to remote stub
+        tcp:port=5002,server=10.222.78.178
+		
+Reference : http://blogs.msdn.com/b/ntdebugging/archive/2009/02/09/remote-debugging-connecting-to-a-remote-stub-using-the-microsoft-debugging-tools-for-windows.aspx
+
+----------------------------------------------------------------------------------- AUTOMATIC CRASH DUMPS
+
+You can configure the Windows registry therefore a crash dump can be created
+as soon as an application crashes :
+
+https://msdn.microsoft.com/en-us/library/windows/desktop/bb787181(v=vs.85).aspx
+
+----------------------------------------------------------------------------------- NICELY PRINTING STL CONTAINERS IN WINDBG
+
+Reference : http://blogs.microsoft.co.il/sasha/2013/07/18/displaying-and-searching-stdvector-contents-in-windbg/
+
+----------------------------------------------------------------------------------- ASLR
+
+ASLR can relocate addresses of dlls so use !imgreloc which displays relocated addresses are shown
+
+Reference : http://blogs.msdn.com/b/winsdk/archive/2009/11/30/how-to-disable-address-space-layout-randomization-aslr.aspx
+-----------------------------------------------------------------------------------

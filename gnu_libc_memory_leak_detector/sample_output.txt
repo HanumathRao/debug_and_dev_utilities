@@ -1,0 +1,41 @@
+
+type : malloc , arg1  : 256, address : 0x602010,
+callstack : 
+	__GI___libc_malloc
+	main
+type : realloc , arg1 : 0x602010, arg2 : 512, address : 0x602010,
+callstack : 
+	__GI___libc_realloc
+	main
+type : calloc , arg1 : 18, arg2 : 16, address : 0x602230,
+callstack : 
+	__libc_calloc
+	allocate_dtv
+	__GI__dl_allocate_tls
+	allocate_stack
+	__pthread_create_2_1
+	main
+type : calloc , arg1 : 18, arg2 : 16, address : 0x602360,
+callstack : 
+	__libc_calloc
+	allocate_dtv
+	__GI__dl_allocate_tls
+	allocate_stack
+	__pthread_create_2_1
+	main
+type : free , arg1 : 0x0,
+callstack : 
+	__GI___libc_free
+	__libc_thread_freeres
+	start_thread
+	clone
+type : free , arg1 : 0x0,
+callstack : 
+	__GI___libc_free
+	__libc_thread_freeres
+	start_thread
+	clone
+type : free , arg1 : 0x602010,
+callstack : 
+	__GI___libc_free
+	main
