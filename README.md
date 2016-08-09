@@ -20,3 +20,6 @@ https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-wind
 **gdb_cheatsheet :** GDB cheatsheet including GDB automation , coredumps, text UI mode and hw watchpoints
 
 **windbg_cheatsheet :** Windbg cheatsheet
+
+Note: As for programatic examples such as inserting memory/hardware breakpoints and hooking GNU LibC/MS CRT memory functions
+see https://github.com/akhin/cpp_multithreaded_order_matching_engine/tree/master/source/memory/debugging
