@@ -10,6 +10,8 @@ cheatsheets.
 with their information ( arguments, callstacks and return value) by automating GDB. Memleak.py detects memory leaks analyzing output
 of memdump.py. You can use memleak.sh to detect memory leaks at one go as it calls both memdump.py and memleak.py.
 
+Detailed blog article : https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
+
 **windbg automated attach to process** It is a simple script that waits for a specific process , then starts Windbg and make Windbg attach
 to the process and execute initial commands. Detailed info is on :
 
