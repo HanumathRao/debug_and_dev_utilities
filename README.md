@@ -17,6 +17,11 @@ to the process and execute initial commands. Detailed info is on :
 
 https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
 
+**pretty_exception.h :** It is a header only C++ mini library that allows you to throw exception messages with file, line number, function name
+, callstack and also supports colored console messages and even traces for syslog/Dbgview. Supports GCC/Linux and MSVC/Windows.
+
+Detailed blog article : https://nativecoding.wordpress.com/2016/07/24/c-pretty-exceptions/
+
 **gdb_cheatsheet :** GDB cheatsheet including GDB automation , coredumps, text UI mode and hw watchpoints
 
 **windbg_cheatsheet :** Windbg cheatsheet
