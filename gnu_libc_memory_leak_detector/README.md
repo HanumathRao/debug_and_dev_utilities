@@ -18,6 +18,15 @@ For GNU LibC Runtime memory functions , see https://sourceware.org/git/?p=glibc.
 				
 At the end it will output a file called leak_report.txt and another one called memdump.txt.
 
+Note : As prerequisites you will need to install debug version of GNU LibC runtime. On Ubuntu : 
+
+	sudo apt-get install libc6-dbg
+
+And on CentOS :
+
+	yum install yum-utils
+	debuginfo-install glibc
+
 **Watch Asciinema recording :** 
 
 
