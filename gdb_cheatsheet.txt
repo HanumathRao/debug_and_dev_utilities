@@ -12,16 +12,16 @@ n                                                       # for next line
 c                                                       # for continue
 s                                                       # step into
 finish                                                  # go to end of current frame
-ret 													# return from function immediately
+ret                                                     # return from function immediately
 q                                                       # quit
 list                                                    # source code line_number shows around of where you are
 info locals                                             # local variables on stack
 info args                                               # arguments passed to the function
-i r														# registers
-info proc												# virtual memory-physical memory mappings
+i r                                                     # registers
+info proc                                               # virtual memory-physical memory mappings
 print variable_name                                     # prints variable
-disas function_name										# disassembly a function
-disas/s													# disassembly and show source at the same time
+disas function_name                                     # disassembly a function
+disas/s                                                 # disassembly and show source at the same time
 shell command                                           # executes a shell command
 ################################################################
 #Callstacks
@@ -31,7 +31,7 @@ down                                                    # change to lower stack 
 ################################################################
 #Breakpoints
 info                                                    # breakpoints to list all break points
-b __libc_malloc											# place a breakpoint in malloc
+b __libc_malloc                                         # place a breakpoint in malloc
 disable 2                                               # removes bp with id 2
 condition bpid (strstr( buf, "Unknown") == 0x00000000)  # puts a condition on bp with id bpid
 save breakpoints myfile.txt                             # saving breakpoints , required GDB version is minimum 7.2
@@ -82,22 +82,22 @@ gdb -ex continue -p $progpid
 source myfile.txt                                       # loads a GDB script
 gdb -batch -ex 'command1' -ex 'command2' ./debugee      # starts GDB in batch mode and executes 2 commands
 #A script that dumps all malloc call information :
-	# set breakpoint pending on used in order to avoid prompt of 
-	# do you want to set a bp for a symbol that will be loaded future
-	set breakpoint pending on
-	b __libc_malloc
-	commands
-	# Display callstack
-	backtrace
-	n
-	# Display size argument passed to malloc
-	print bytes
-	finish
-	finish
-	# Display return value ( address allocated ) of malloc
-	print $rax
-	cont
-	end
+    # set breakpoint pending on used in order to avoid prompt of 
+    # do you want to set a bp for a symbol that will be loaded future
+    set breakpoint pending on
+    b __libc_malloc
+    commands
+    # Display callstack
+    backtrace
+    n
+    # Display size argument passed to malloc
+    print bytes
+    finish
+    finish
+    # Display return value ( address allocated ) of malloc
+    print $rax
+    cont
+    end
 ################################################################
 # GDB Automation with built-in Python interpreter
 source myfile.py                                        # loads a Python script
@@ -106,14 +106,14 @@ https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-pyth
 ################################################################
 # Remote GDB setup
 On the machine where the application runs :
-	If gdbserver is not present , copy it over.
-	Start the application.
-	Start gdbserver: gdbserver gdbmachine:2345 --attach program
+    If gdbserver is not present , copy it over.
+    Start the application.
+    Start gdbserver: gdbserver gdbmachine:2345 --attach program
 
 On gdbmachine:
-	At the gdb prompt, enter: target remote appmachine:2345
+    At the gdb prompt, enter: target remote appmachine:2345
 
-	Sometimes you may have to tunnel over ssh:
-	ssh -L 5432:appmachine:2345 user@appmachine
+    Sometimes you may have to tunnel over ssh:
+    ssh -L 5432:appmachine:2345 user@appmachine
 
-	At the gdb prompt: target remote localhost:5432
+    At the gdb prompt: target remote localhost:5432

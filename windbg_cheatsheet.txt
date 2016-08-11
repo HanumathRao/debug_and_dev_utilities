@@ -19,15 +19,15 @@ use .logopen , all of the commands you input and response from windbg will be lo
 ----------------------------------------------------------------------------------- WINDBG SCRIPTING AUTOMATION
 
 The options you have :
-	1. Writing DLL extensions using MS`s Windbg extension library in C++
-	2. Create Windbg scripts
-	3. Unofficial Powershell Powerdbg library
-	4. Unofficial Python library
-	
+    1. Writing DLL extensions using MS`s Windbg extension library in C++
+    2. Create Windbg scripts
+    3. Unofficial Powershell Powerdbg library
+    4. Unofficial Python library
+    
 An introduction to Windbg automation : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
 
 ----------------------------------------------------------------------------------- DEBUGGING 32 BIT ON 64 BIT
-	  
+      
 If you are debugging 32 bit on 64 bit machine you have to type :
 
 .effmach x86
@@ -48,7 +48,7 @@ This is supported starting from Win10 DDK :
 https://msdn.microsoft.com/en-us/library/windows/hardware/mt219728%28v=vs.85%29.aspx
 
 ----------------------------------------------------------------------------------- SYMBOLS, MODULES, ATTACHING
-- F6	shortcut for attaching
+- F6    shortcut for attaching
 
 - You can attach to Windows services
 
@@ -57,10 +57,10 @@ https://msdn.microsoft.com/en-us/library/windows/hardware/mt219728%28v=vs.85%29.
 - Symbol path and source path are only stored in the workspaces or you can enter them with .srcpath and .sympath commands
 
 - Public vs Private symbol : public symbols have functions , global variables as externs
-							 private = public + local vars, address of their entry points , frame pointer omission records
+                             private = public + local vars, address of their entry points , frame pointer omission records
 - Symbol servers : Ctrl S and then enter
                   
-				   SRV*c:\symsrv*http://msdl.microsoft.com/download/symbols
+                   SRV*c:\symsrv*http://msdl.microsoft.com/download/symbols
                               
                    that will download symbols to c:\symsrv
                             
@@ -69,29 +69,29 @@ https://msdn.microsoft.com/en-us/library/windows/hardware/mt219728%28v=vs.85%29.
 - After starting/attaching the debuggee , execute : .reload /f /v /o
                                 
 - .sympath  shows local symbol path
-								
+                                
 - lm shows loaded modules
-								
+                                
 - _NT_SYMBOL_PATH environment variable : Both Windbg and VS search symbols looks for this environment variable first
 Example value : symsrv*symsrv.dll*C:\WindowsSymbols*http://msdl.microsoft.com/download/symbols
 
 - By default symbol loading is deferred to force it by using the ld (Load Symbols) command or the .reload (Reload Module) command with the /f option.
 
 - How to list all symbols in a module : x module!*
-	  
+      
 ----------------------------------------------------------------------------------- BREAKPOINTS AND STEPPING
 
 Symbols are deferred, to put breakpoint at the beginning 
 
-			lm -> to check if deferred or not for your module
+            lm -> to check if deferred or not for your module
 
 If no deferred modules, then 
-				
-			ld your_module_name to verify if it can be found
+                
+            ld your_module_name to verify if it can be found
 
 then to create a breakpoint :
 
-	bp yourmodule!yourfunction_signature
+    bp yourmodule!yourfunction_signature
 
 Or just open the source file and press F9
 
@@ -131,25 +131,25 @@ A second chance exception means that your process did not handle an exception an
 ----------------------------------------------------------------------------------- HOW TO PUT BREAKPOINTS TO WINDOWS API CALLS
 
 Just same way like bp module!function :
-			
-			bp ntdll!NtWaitForSinleObject*
+            
+            bp ntdll!NtWaitForSinleObject*
 
 (Since there is A W versions use * at the end like this )
 
-			bp kernel32!LoadLib*
-			
+            bp kernel32!LoadLib*
+            
 ----------------------------------------------------------------------------------- HOW TO BREAK WHEN A MODULE LOADED
 
 Break on module load :
 
-			sxe ld IMM32.DLL ( hacky way places an exception sx means set exception )
+            sxe ld IMM32.DLL ( hacky way places an exception sx means set exception )
 
 ----------------------------------------------------------------------------------- HARDWARE BREAKPOINTS / MEMORY Breakpoint
 
 - 64 bit not supported 
 - Break on Access  :
 
-		ba e 1 00453689 
+        ba e 1 00453689 
 
 - Command e is type. It can be one of this execute read write etc
 
@@ -158,8 +158,8 @@ r (read/write) Breaks into the debugger when the CPU reads or writes at the spec
 w (write) Breaks into the debugger when the CPU writes at the specified address.
 
 - To automate it , press Alt-F9 , and in any breakpoint enter a command like :
-	
-	ba r4 myVariable
+    
+    ba r4 myVariable
 
 ----------------------------------------------------------------------------------- HOW TO VIEW FUNCTION ARGUMENTS
 
@@ -167,9 +167,9 @@ In views , you have call stack windows and you have functions windows.
 If symbols are loaded you can see things in watch window/locals windows 
 or 
 after seeing addresses of args passed to the function , you can do :
-	
-	du address to see it
-	
+    
+    du address to see it
+    
 or open Memory Windows and simply enter the address
       
 ----------------------------------------------------------------------------------- CALL STACKS
@@ -186,16 +186,16 @@ k : Display call stack.
 - ~2 switch to thread with ID 2
 - ~2s     Change context switch to 2nd thread
 - After switching to a thread you enter kn ( ex k5 k10 ... ) to see its stack
-- !threads   	all threads
-- !runaway  	cpu time of each thread ( which thread is consuming the CPU? )
+- !threads      all threads
+- !runaway      cpu time of each thread ( which thread is consuming the CPU? )
 - !locks show all locks
 ----------------------------------------------------------------------------------- DEBUG MEMORY : EXTRACTION AND EDITING and SEARCHING
 DUMPING MEMORY :
 
-	!dso ->Dump stack objects
-	!do   dump objects
-	!da   dump arrays
-	dt structName 0xaddress - display a structure in proper format if you have symbols
+    !dso ->Dump stack objects
+    !do   dump objects
+    !da   dump arrays
+    dt structName 0xaddress - display a structure in proper format if you have symbols
 
 EDITING MEMORY :
 
@@ -206,39 +206,39 @@ s searches memory
 
 ----------------------------------------------------------------------------------- SYSTEM MEMORY - VMEMORY AND HEAP
                 
-!vadump	dump list of memory pages and info
-!address -summary	Show summery of memory by types
-!heap -s	Show all heaps
-!heap -stat -h <heap addr>	Show blocks of specific heap
-!heap -flt s <block size>	Show addresses of memory blocks of specific size by heap
-!heap -p -a <usrPtr>	Display allocation call stack for given block user ptr address
+!vadump dump list of memory pages and info
+!address -summary   Show summery of memory by types
+!heap -s    Show all heaps
+!heap -stat -h <heap addr>  Show blocks of specific heap
+!heap -flt s <block size>   Show addresses of memory blocks of specific size by heap
+!heap -p -a <usrPtr>    Display allocation call stack for given block user ptr address
 
 Memory leak finding process :
-	Approach 1 : FIND OUT HEAP GROWING POINTS 
-			
-			!heap -s  , DISPLAYS HEAPS WITH SIZES
+    Approach 1 : FIND OUT HEAP GROWING POINTS 
+            
+            !heap -s  , DISPLAYS HEAPS WITH SIZES
 
-	Leak the memory then !heap -s again , spot the size diff ,
-	Finally :
-	
-	!heap -stat -h 00330000 ( 0030000 is the growing heap ) gives you call stacksdoing that
-	then the rest is resolving address :
-	http://www.codeproject.com/Articles/31382/Memory-Leak-Detection-Using-Windbg
+    Leak the memory then !heap -s again , spot the size diff ,
+    Finally :
+    
+    !heap -stat -h 00330000 ( 0030000 is the growing heap ) gives you call stacksdoing that
+    then the rest is resolving address :
+    http://www.codeproject.com/Articles/31382/Memory-Leak-Detection-Using-Windbg
  
 
-	Approach 2 : You can use CRT debug heap which will require you to recompile
-	and Windbg will show CRT debug info at that point :
+    Approach 2 : You can use CRT debug heap which will require you to recompile
+    and Windbg will show CRT debug info at that point :
 
-	Detected memory leaks!
-	Dumping objects ->
-	{80} normal block at 0x003B4378, 8000 bytes long.
-	Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
-	{79} normal block at 0x003B3F50, 1000 bytes long.
-	Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
-	Object dump complete.
-	At WinDBG, we can trace down the originating functions
+    Detected memory leaks!
+    Dumping objects ->
+    {80} normal block at 0x003B4378, 8000 bytes long.
+    Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+    {79} normal block at 0x003B3F50, 1000 bytes long.
+    Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
+    Object dump complete.
+    At WinDBG, we can trace down the originating functions
 
-	000:0> !heap -p -a 0x003B4378
+    000:0> !heap -p -a 0x003B4378
 
 Catching page faults for performance : http://www.codeproject.com/Articles/186230/Extending-windbg-with-Page-Fault-Breakpoints
 
@@ -246,26 +246,26 @@ Catching page faults for performance : http://www.codeproject.com/Articles/18623
 
 !teb        dump thread environment block
 !peb        dump process environment block
-!gle		get last error
+!gle        get last error
 !comcalls   Show COM calls on all threads
-!handles  	all handles
-.ecxr 		will switch to the context frame of the exception that occurred
+!handles    all handles
+.ecxr       will switch to the context frame of the exception that occurred
 !analyze -v , analyzes the exception
 
 ----------------------------------------------------------------------------------- HANG ANALYSIS
 
 1. run !analyze -hang -v      
 
-	The first thing you will see will be  80000003 (Break instruction exception , first chance exception) 
-	At the end , it will show you the thread and its stack which is hung
+    The first thing you will see will be  80000003 (Break instruction exception , first chance exception) 
+    At the end , it will show you the thread and its stack which is hung
                                
 2. type ~ to see all threads , here you can see ID of your thread
-	
+    
 3. ~ns  , will switch to thread n , just use the one you just found
                                
 4. In Windbg UI : View -> Callstack
 
-					OR 
+                    OR 
    After switching to the thread you want to see, to dislay the stack frame :
    kn to see its stack  
 
@@ -277,9 +277,9 @@ Catching page faults for performance : http://www.codeproject.com/Articles/18623
 
 ----------------------------------------------------------------------------------- DUMP FILES , HOW TO CREATE
 In user mode , there is 2 types :
-			1) full dumps
-			2) mini dumps
-			
+            1) full dumps
+            2) mini dumps
+            
 Full memory dump files. These files contain the contents of virtual memory for a process. 
 These files are the most useful when you are troubleshooting unknown issues. A support engineer 
 can use these files to look anywhere in memory to locate any object, pull up the variable that 
@@ -303,10 +303,10 @@ How to create them programtically : In Windows API , there is MiniDumpWriteDump 
 
 How to analyze crash dumps quickly :
 
-	1. set your sympath , symserver , and place your symbols
-	2. load symbols : .reload /force
-	3. k for seeing call stack
-	4. .ecxr for exception details
+    1. set your sympath , symserver , and place your symbols
+    2. load symbols : .reload /force
+    3. k for seeing call stack
+    4. .ecxr for exception details
 
 ----------------------------------------------------------------------------------- REMOTE DEBUGGING 
 
@@ -319,7 +319,7 @@ For user mode servers, you have to run Dbgsrv.exe  in the remote server :
 2. On client : 
       Connect to remote stub
         tcp:port=5002,server=10.222.78.178
-		
+        
 Reference : http://blogs.msdn.com/b/ntdebugging/archive/2009/02/09/remote-debugging-connecting-to-a-remote-stub-using-the-microsoft-debugging-tools-for-windows.aspx
 
 ----------------------------------------------------------------------------------- AUTOMATIC CRASH DUMPS
