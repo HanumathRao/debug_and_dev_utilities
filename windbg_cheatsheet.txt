@@ -16,6 +16,16 @@ You can save commands :
 
 use .logopen , all of the commands you input and response from windbg will be logged, and then use .logclose to flush the data into
 
+----------------------------------------------------------------------------------- WINDBG SCRIPTING AUTOMATION
+
+The options you have :
+	1. Writing DLL extensions using MS`s Windbg extension library in C++
+	2. Create Windbg scripts
+	3. Unofficial Powershell Powerdbg library
+	4. Unofficial Python library
+	
+An introduction to Windbg automation : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
+
 ----------------------------------------------------------------------------------- DEBUGGING 32 BIT ON 64 BIT
 	  
 If you are debugging 32 bit on 64 bit machine you have to type :
