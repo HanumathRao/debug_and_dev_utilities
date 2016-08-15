@@ -1,36 +1,42 @@
 -----------------------------------------------------------------------------------  INSTALLATION
-  DOWNLOAD / INSTALL
 
-Dowmload Windows SDK , install it , choose only Windbg  OR applicationVerifier
+Dowmload Windows SDK , install it , choose only Windbg  OR application verifier
 https://dev.windows.com/en-us/downloads/windows-10-sdk
 
------------------------------------------------------------------------------------ COMMANDS
+----------------------------------------------------------------------------------- COMMAND TYPES
 
-Command types : 1) regular    K
-                2) meta/dot commands  to control behaviour of windbg -> .cls .time .reload
-                3) extension commands  !analyze !locks !teb !peb
-                
-.cls    clear screen
+Command types : 
 
-You can save commands :
+	1. regular commands : k
+    2. meta/dot commands to control behaviour of windbg : .cls .time .reload
+    3. extension commands : !analyze !locks !teb !peb          
 
-use .logopen , all of the commands you input and response from windbg will be logged, and then use .logclose to flush the data into
+----------------------------------------------------------------------------------- SAVING SESSION / LIST OF COMMANDS
+
+use .logopen , all of the commands you input and response from windbg will be logged
+and then use .logclose to flush the data into
 
 ----------------------------------------------------------------------------------- WINDBG SCRIPTING AUTOMATION
 
-The options you have :
+The options are :
+
     1. Writing DLL extensions using MS`s Windbg extension library in C++
     2. Create Windbg scripts
-    3. Unofficial Powershell Powerdbg library
-    4. Unofficial Python library
-    
-An introduction to Windbg automation : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
+			A STL Pretty Printer sample :  http://blogs.microsoft.co.il/sasha/2013/07/18/displaying-and-searching-stdvector-contents-in-windbg/
+    3. Windbg batch commands : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
+	
+----------------------------------------------------------------------------------- TRACING API CALLS LIKE STRACE IN LINUX
+
+You can do this with log extensions extension ( !logexts )
+
+It outputs LGV file and you can use a utility that comes with "Windows Debugging Tools"
+called LogViewer to see those traces
 
 ----------------------------------------------------------------------------------- DEBUGGING 32 BIT ON 64 BIT
       
 If you are debugging 32 bit on 64 bit machine you have to type :
 
-.effmach x86
+	.effmach x86
 
 Also if you debug with wrong version of windbg : you will get the error below :
 
@@ -40,19 +46,14 @@ Also if you debug with wrong version of windbg : you will get the error below :
 
 Simply in windbg , enter locations for source files , and during debugging it should bring it up
 
-Also in the call stack window, you can switch to source code
+Also in the call stack window, you can switch to source code as well
 
 ----------------------------------------------------------------------------------- USING NATVIS FILES 
 
 This is supported starting from Win10 DDK :
 https://msdn.microsoft.com/en-us/library/windows/hardware/mt219728%28v=vs.85%29.aspx
 
------------------------------------------------------------------------------------ SYMBOLS, MODULES, ATTACHING
-- F6    shortcut for attaching
-
-- You can attach to Windows services
-
-- Automated attachment : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
+----------------------------------------------------------------------------------- SYMBOLS & MODULES
 
 - Symbol path and source path are only stored in the workspaces or you can enter them with .srcpath and .sympath commands
 
@@ -78,6 +79,14 @@ Example value : symsrv*symsrv.dll*C:\WindowsSymbols*http://msdl.microsoft.com/do
 - By default symbol loading is deferred to force it by using the ld (Load Symbols) command or the .reload (Reload Module) command with the /f option.
 
 - How to list all symbols in a module : x module!*
+
+----------------------------------------------------------------------------------- ATTACHMENT
+
+- F6 shortcut for attaching
+
+- You can attach to Windows services
+
+- Automated attachment : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
       
 ----------------------------------------------------------------------------------- BREAKPOINTS AND STEPPING
 
@@ -105,17 +114,17 @@ bd number : Disable breakpoint identified by number.
 p : Step over.
 t : Step in.  OR just F10 and F11
 
-pc : Step to next CALL instruction.
-pt – Steps through until the next return instruction.
+pc : Step to next CALL instruction
+pt : Steps through until the next return instruction
 
-g continue
+g : continue
 
-CONDITIONAL  BREAKPOINTS : Press Alt-F9 which brings up a easy to use dialog 
+Conditional breakpoints : Press Alt-F9 which brings up a easy to use dialog 
 Simply say "Enable" for a bp , and then write the condition
 
 Deleting all breakpoints : Alt f9 and then delete them
 
------------------------------------------------------------------------------------ first chance exceptions / 2nd chance exceptions
+----------------------------------------------------------------------------------- 1ST AND 2ND CHANCE EXCEPTIONS
 
 First chance exception gives the debugger a first chance to inspect the exception and 
 application state before the application handles the exception.
@@ -144,9 +153,10 @@ Break on module load :
 
             sxe ld IMM32.DLL ( hacky way places an exception sx means set exception )
 
------------------------------------------------------------------------------------ HARDWARE BREAKPOINTS / MEMORY Breakpoint
+----------------------------------------------------------------------------------- HARDWARE BREAKPOINTS
 
 - 64 bit not supported 
+
 - Break on Access  :
 
         ba e 1 00453689 
@@ -163,9 +173,11 @@ w (write) Breaks into the debugger when the CPU writes at the specified address.
 
 ----------------------------------------------------------------------------------- HOW TO VIEW FUNCTION ARGUMENTS
 
-In views , you have call stack windows and you have functions windows.
+In views , you have call stack windows and you have functions windows
 If symbols are loaded you can see things in watch window/locals windows 
+
 or 
+
 after seeing addresses of args passed to the function , you can do :
     
     du address to see it
@@ -189,45 +201,24 @@ k : Display call stack.
 - !threads      all threads
 - !runaway      cpu time of each thread ( which thread is consuming the CPU? )
 - !locks show all locks
------------------------------------------------------------------------------------ DEBUG MEMORY : EXTRACTION AND EDITING and SEARCHING
-DUMPING MEMORY :
+----------------------------------------------------------------------------------- MEMORY OBJECTS
 
-    !dso ->Dump stack objects
-    !do   dump objects
-    !da   dump arrays
-    dt structName 0xaddress - display a structure in proper format if you have symbols
-
-EDITING MEMORY :
-
-e[d|w|b] 0xaddress newbytes     - edit memory
-
-SEARCHING MEMORY :
-s searches memory
-
+!dso  dump stack objects
+!do   dump objects
+!da   dump arrays
+dt structName 0xaddress - display a structure in proper format if you have symbols
+	
 ----------------------------------------------------------------------------------- SYSTEM MEMORY - VMEMORY AND HEAP
                 
-!vadump dump list of memory pages and info
-!address -summary   Show summery of memory by types
-!heap -s    Show all heaps
-!heap -stat -h <heap addr>  Show blocks of specific heap
-!heap -flt s <block size>   Show addresses of memory blocks of specific size by heap
-!heap -p -a <usrPtr>    Display allocation call stack for given block user ptr address
+!vadump 			dump list of memory pages and info
+!address -summary   shows summary of memory by types
+!heap -s    		show all heaps
+!heap -stat -h <heap addr>  show blocks of specific heap
+!heap -flt s <block size>   show addresses of memory blocks of specific size by heap
+!heap -p -a <usrPtr>    	display allocation call stack for given block user ptr address
 
-Memory leak finding process :
-    Approach 1 : FIND OUT HEAP GROWING POINTS 
-            
-            !heap -s  , DISPLAYS HEAPS WITH SIZES
-
-    Leak the memory then !heap -s again , spot the size diff ,
-    Finally :
-    
-    !heap -stat -h 00330000 ( 0030000 is the growing heap ) gives you call stacksdoing that
-    then the rest is resolving address :
-    http://www.codeproject.com/Articles/31382/Memory-Leak-Detection-Using-Windbg
- 
-
-    Approach 2 : You can use CRT debug heap which will require you to recompile
-    and Windbg will show CRT debug info at that point :
+To find leaks , you can use CRT debug heap which will require you to recompile
+and Windbg will show CRT debug info at that point :
 
     Detected memory leaks!
     Dumping objects ->
@@ -236,21 +227,20 @@ Memory leak finding process :
     {79} normal block at 0x003B3F50, 1000 bytes long.
     Data: <                > CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD 
     Object dump complete.
+
     At WinDBG, we can trace down the originating functions
 
     000:0> !heap -p -a 0x003B4378
 
-Catching page faults for performance : http://www.codeproject.com/Articles/186230/Extending-windbg-with-Page-Fault-Breakpoints
-
 ----------------------------------------------------------------------------------- MISC 
 
-!teb        dump thread environment block
-!peb        dump process environment block
-!gle        get last error
-!comcalls   Show COM calls on all threads
-!handles    all handles
-.ecxr       will switch to the context frame of the exception that occurred
-!analyze -v , analyzes the exception
+!teb        	dump thread environment block
+!peb        	dump process environment block
+!gle        	get last error
+!comcalls   	show COM calls on all threads
+!handles    	all handles
+.ecxr       	will switch to the context frame of the exception that occurred
+!analyze -v		analyzes the exception , see crash & hang analysis
 
 ----------------------------------------------------------------------------------- HANG ANALYSIS
 
@@ -266,8 +256,10 @@ Catching page faults for performance : http://www.codeproject.com/Articles/18623
 4. In Windbg UI : View -> Callstack
 
                     OR 
-   After switching to the thread you want to see, to dislay the stack frame :
-   kn to see its stack  
+					
+   After switching to the thread you want to see, to display the stack frame :
+   
+   kn to see its stack
 
    Then finally switch to related stack frame :  .frame n ( .frame 0 for the newest frame) 
                               
@@ -275,38 +267,28 @@ Catching page faults for performance : http://www.codeproject.com/Articles/18623
 
 !analyze -v  analyzes the exceptions occured. It directly pinpoints you the crash point
 
------------------------------------------------------------------------------------ DUMP FILES , HOW TO CREATE
-In user mode , there is 2 types :
-            1) full dumps
-            2) mini dumps
-            
-Full memory dump files. These files contain the contents of virtual memory for a process. 
-These files are the most useful when you are troubleshooting unknown issues. A support engineer 
-can use these files to look anywhere in memory to locate any object, pull up the variable that 
-was loaded on any call stack, and disassemble code to help diagnose the problem. The disadvantage 
-of full memory dump files is that they are large. It also may take additional time to collect these 
-files, and the process that is being recorded must be frozen while the dump file is created.
+----------------------------------------------------------------------------------- DUMP FILES & SEARCH IN MEMORY
 
-Mini memory dump files. A mini dump file is more configurable than a full dump file and can range from only 
-several megabytes (MB) up to the size of a full dump file. The size differs because of the amount of virtual 
-memory that the debugger is writing to disk. Although you can gather mini memory dump files quickly and they are small, 
-they also have a disadvantage. Mini dump files may contain much less information than full dump files. 
-The information that a mini dump file gathers may be virtually useless to a support engineer 
-if the area of memory that the support engineer has to troubleshoot was not captured. 
-For example, if the heap memory is not written to the memory dump file, a support engineer cannot examine the contents 
-of a message that was being processed at the time that the problem occurred. Useful information, such as the subject line and the recipient list, would be lost.
+You can also save a dump in Visual Studio ( Debug -> Save crash dump )
+takThen if you open it in Windbg , you can make searches in it : 
+	
+		s -a 0 L?80000000 "BLABLA"
+
+	s : search
+	-a : ascii
+	0 : start address
+	L?80000000 : length of search
+	
+	Memory Range										Usage
+
+	Low 2GB range (0x00000000 through 0x7fffffff) 		Used by the process
+
+	High 2GB range (0x80000000 through 0xffffffff)		Used by the system
 
 How to create them with process explorer : 
 http://blogs.msdn.com/b/msdnts/archive/2006/11/24/how-to-debug-application-crash-hang-in-production-environment.aspx
 
 How to create them programtically : In Windows API , there is MiniDumpWriteDump function
-
-How to analyze crash dumps quickly :
-
-    1. set your sympath , symserver , and place your symbols
-    2. load symbols : .reload /force
-    3. k for seeing call stack
-    4. .ecxr for exception details
 
 ----------------------------------------------------------------------------------- REMOTE DEBUGGING 
 
@@ -329,13 +311,4 @@ as soon as an application crashes :
 
 https://msdn.microsoft.com/en-us/library/windows/desktop/bb787181(v=vs.85).aspx
 
------------------------------------------------------------------------------------ NICELY PRINTING STL CONTAINERS IN WINDBG
-
-Reference : http://blogs.microsoft.co.il/sasha/2013/07/18/displaying-and-searching-stdvector-contents-in-windbg/
-
------------------------------------------------------------------------------------ ASLR
-
-ASLR can relocate addresses of dlls so use !imgreloc which displays relocated addresses are shown
-
-Reference : http://blogs.msdn.com/b/winsdk/archive/2009/11/30/how-to-disable-address-space-layout-randomization-aslr.aspx
------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------- 
