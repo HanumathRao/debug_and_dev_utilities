@@ -275,7 +275,7 @@ takThen if you open it in Windbg , you can make searches in it :
 		s -a 0 L?80000000 "BLABLA"
 
 	s : search
-	-a : ascii
+	-a : ascii  , -u for unicode
 	0 : start address
 	L?80000000 : length of search
 	
