@@ -16,14 +16,9 @@ Command types :
 use .logopen , all of the commands you input and response from windbg will be logged
 and then use .logclose to flush the data into
 
------------------------------------------------------------------------------------ WINDBG SCRIPTING AUTOMATION
+----------------------------------------------------------------------------------- WINDBG SCRIPTING AUTOMATION & EXTENSIONS
 
-The options are :
-
-    1. Writing DLL extensions using MS`s Windbg extension library in C++
-    2. Create Windbg scripts
-			A STL Pretty Printer sample :  http://blogs.microsoft.co.il/sasha/2013/07/18/displaying-and-searching-stdvector-contents-in-windbg/
-    3. Windbg batch commands : https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
+https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
 	
 ----------------------------------------------------------------------------------- TRACING API CALLS LIKE STRACE IN LINUX
 
