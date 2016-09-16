@@ -306,4 +306,17 @@ as soon as an application crashes :
 
 https://msdn.microsoft.com/en-us/library/windows/desktop/bb787181(v=vs.85).aspx
 
------------------------------------------------------------------------------------ 
+Note : If you want a full memory dump , make sure you have enough space
+
+----------------------------------------------------------------------------------- PAGEHEAP AND TRACKING HEAP CORRUPTIONS
+
+"pageheap" is a special mechanism of Microsoft. If you mark a binary executable 
+with that, that executable will throw exception as soon as a memory corruption happens 
+which will let you know the place of the issue.
+
+To mark an executable you need to first download "Debugging Tools For Windows"
+Then you gflags.exe in cmd line. A nice detailed explanation :
+
+http://otb.manusoft.com/2010/12/debugging-heap-corruption-with-pageheap.htm
+
+-----------------------------------------------------------------------------------
