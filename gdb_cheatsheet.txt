@@ -55,6 +55,14 @@ watch foo                                               # debugger breaks when v
 rwatch                                                  # read watch
 wwatch                                                  # write watch
 ################################################################
+# Catch Points
+catch throw												# hits when any exception thrown
+catch assert											# hits when an assertion occurs
+catch signal											# hits when a signal received
+catch load/unload										# hits when a shared library loaded/unloaded
+catch exec												# hits when exec syscall called
+catch syscall <syscall_name>							# hits when specified syscall called
+################################################################
 #Threads
 thread apply all bt                                     # apply to all threads , in this case show backtrace of all
 info thread                                             # show all threads including their names
