@@ -1,3 +1,17 @@
+----------------------------------------------------------------------------------- DEBUGGING TOOLS FOR WINDOWS
+
+Microsoft`s debuggers come with "Debugging tools for Windows" :
+    ntsd    user mode - command line
+    cdb     user mode - command line
+    kd      kernel mode - command line
+    windbg  user & kernel mode - windows interface
+    
+They share the same engine so commands are same for all.
+
+Additionaly for analysing hang and crashes, "Debugging Tools For Windows" comes 
+with AdPlus ( formerly a VBScript , last version is an executable ) For use 
+of it , see hang and crash in this document.
+
 -----------------------------------------------------------------------------------  INSTALLATION
 
 Dowmload Windows SDK , install it , choose only Windbg  OR application verifier
@@ -7,7 +21,7 @@ https://dev.windows.com/en-us/downloads/windows-10-sdk
 
 Command types : 
 
-	1. regular commands : k
+    1. regular commands : k
     2. meta/dot commands to control behaviour of windbg : .cls .time .reload
     3. extension commands : !analyze !locks !teb !peb          
 
@@ -19,7 +33,7 @@ and then use .logclose to flush the data into
 ----------------------------------------------------------------------------------- WINDBG SCRIPTING AUTOMATION & EXTENSIONS
 
 https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
-	
+    
 ----------------------------------------------------------------------------------- TRACING API CALLS LIKE STRACE IN LINUX
 
 You can do this with log extensions extension ( !logexts )
@@ -31,7 +45,7 @@ called LogViewer to see those traces
       
 If you are debugging 32 bit on 64 bit machine you have to type :
 
-	.effmach x86
+    .effmach x86
 
 Also if you debug with wrong version of windbg : you will get the error below :
 
@@ -202,15 +216,15 @@ k : Display call stack.
 !do   dump objects
 !da   dump arrays
 dt structName 0xaddress - display a structure in proper format if you have symbols
-	
+    
 ----------------------------------------------------------------------------------- SYSTEM MEMORY - VMEMORY AND HEAP
                 
-!vadump 			dump list of memory pages and info
+!vadump             dump list of memory pages and info
 !address -summary   shows summary of memory by types
-!heap -s    		show all heaps
+!heap -s            show all heaps
 !heap -stat -h <heap addr>  show blocks of specific heap
 !heap -flt s <block size>   show addresses of memory blocks of specific size by heap
-!heap -p -a <usrPtr>    	display allocation call stack for given block user ptr address
+!heap -p -a <usrPtr>        display allocation call stack for given block user ptr address
 
 To find leaks , you can use CRT debug heap which will require you to recompile
 and Windbg will show CRT debug info at that point :
@@ -229,13 +243,13 @@ and Windbg will show CRT debug info at that point :
 
 ----------------------------------------------------------------------------------- MISC 
 
-!teb        	dump thread environment block
-!peb        	dump process environment block
-!gle        	get last error
-!comcalls   	show COM calls on all threads
-!handles    	all handles
-.ecxr       	will switch to the context frame of the exception that occurred
-!analyze -v		analyzes the exception , see crash & hang analysis
+!teb            dump thread environment block
+!peb            dump process environment block
+!gle            get last error
+!comcalls       show COM calls on all threads
+!handles        all handles
+.ecxr           will switch to the context frame of the exception that occurred
+!analyze -v     analyzes the exception , see crash & hang analysis
 
 ----------------------------------------------------------------------------------- HANG ANALYSIS
 
@@ -251,34 +265,45 @@ and Windbg will show CRT debug info at that point :
 4. In Windbg UI : View -> Callstack
 
                     OR 
-					
+                    
    After switching to the thread you want to see, to display the stack frame :
    
    kn to see its stack
 
    Then finally switch to related stack frame :  .frame n ( .frame 0 for the newest frame) 
-                              
+   
+Using adplus : 
+
+ADPlus -hang -p 1896,       Attaches the debugger to process with PID
+                            and produces memory dumps
+                            
 ----------------------------------------------------------------------------------- CRASH DUMP ANALYSIS 
 
 !analyze -v  analyzes the exceptions occured. It directly pinpoints you the crash point
+
+Using adplus : 
+
+ADPlus -crash -p 1896,      Attaches the debugger to process with PID
+                            1896, and monitors it for 1st and 2nd
+                            chance access violations (crashes).
 
 ----------------------------------------------------------------------------------- DUMP FILES & SEARCH IN MEMORY
 
 You can also save a dump in Visual Studio ( Debug -> Save crash dump )
 takThen if you open it in Windbg , you can make searches in it : 
-	
-		s -a 0 L?80000000 "BLABLA"
+    
+        s -a 0 L?80000000 "BLABLA"
 
-	s : search
-	-a : ascii  , -u for unicode
-	0 : start address
-	L?80000000 : length of search
-	
-	Memory Range										Usage
+    s : search
+    -a : ascii  , -u for unicode
+    0 : start address
+    L?80000000 : length of search
+    
+    Memory Range                                        Usage
 
-	Low 2GB range (0x00000000 through 0x7fffffff) 		Used by the process
+    Low 2GB range (0x00000000 through 0x7fffffff)       Used by the process
 
-	High 2GB range (0x80000000 through 0xffffffff)		Used by the system
+    High 2GB range (0x80000000 through 0xffffffff)      Used by the system
 
 How to create them with process explorer : 
 http://blogs.msdn.com/b/msdnts/archive/2006/11/24/how-to-debug-application-crash-hang-in-production-environment.aspx
