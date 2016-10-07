@@ -23,6 +23,7 @@ print variable_name                                     # prints variable
 disas function_name                                     # disassembly a function
 disas/s                                                 # disassembly and show source at the same time
 shell command                                           # executes a shell command
+call pow(3,2)											# you can call functions and pass arguments with "call"
 ################################################################
 #Callstacks
 backtrace                                               # call stack
@@ -62,6 +63,13 @@ catch signal											# hits when a signal received
 catch load/unload										# hits when a shared library loaded/unloaded
 catch exec												# hits when exec syscall called
 catch syscall <syscall_name>							# hits when specified syscall called
+################################################################
+# GDB Checkpoints
+checkpoint												# Saves a snapshot of debugee
+restart <checkpoint-id>									# restores the snapshot state
+################################################################
+# Compiling and injecting C++ code during debugging
+https://sourceware.org/gdb/onlinedocs/gdb/Compiling-and-Injecting-Code.html
 ################################################################
 #Threads
 thread apply all bt                                     # apply to all threads , in this case show backtrace of all
