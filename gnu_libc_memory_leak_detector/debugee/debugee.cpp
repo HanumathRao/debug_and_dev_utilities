@@ -1,4 +1,3 @@
-// g++  -Wall -g -pthread debugee.cpp -o debugee && ./debugee
 #include <iostream>
 #include <pthread.h>
 #include <cstdlib>
