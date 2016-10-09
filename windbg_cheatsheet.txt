@@ -57,10 +57,13 @@ Simply in windbg , enter locations for source files , and during debugging it sh
 
 Also in the call stack window, you can switch to source code as well
 
------------------------------------------------------------------------------------ USING NATVIS FILES 
+----------------------------------------------------------------------------------- USING NATVIS FILES AND DX COMMAND
 
 This is supported starting from Win10 DDK :
-https://msdn.microsoft.com/en-us/library/windows/hardware/mt219728%28v=vs.85%29.aspx
+https://msdn.microsoft.com/en-us/library/windows/hardware/mt146547(v=vs.85).aspx
+
+dx command to use Natvis files :
+https://msdn.microsoft.com/en-us/library/windows/hardware/dn936815(v=vs.85).aspx
 
 ----------------------------------------------------------------------------------- SYMBOLS & MODULES
 
