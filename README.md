@@ -12,6 +12,8 @@ of memdump.py. You can use memleak.sh to detect memory leaks at one go as it cal
 
 Detailed blog article : https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
 
+**windbg_skeleton_extension :** A template code to build Windbg extensions.
+
 **gdb_cheatsheet :** GDB cheatsheet including GDB automation , coredumps, text UI mode and hw watchpoints
 
 **windbg_cheatsheet :** Windbg cheatsheet
