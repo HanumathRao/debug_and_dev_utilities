@@ -1,0 +1,404 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title></title>
+</head>
+<body>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+	<style>
+		#selectable_rules_list .ui-selecting { background: #FECA40; }
+		#selectable_rules_list .ui-selected { background: #F39814; color: white; }
+		#selectable_rules_list { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+		#selectable_rules_list li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+	</style>
+
+	<style>
+		select {
+		  width: 350px;
+		}
+	</style>
+   
+	<div id="regexp_creator_div" style="border: 2px solid; border-radius: 5px;" >
+  
+		<p></p>
+		<label id="current_regexp">Current regular expression generated : //</label>
+		<p></p>
+		<label for="match_string_options">Select a matching option for the regular expression. :</label>
+		<br>
+		<br>
+		<select name="match_string_options" id="match_string_options">
+			<option selected="selected">Match a string which contains</option>
+			<option>Match a string which starts with</option>
+			<option>Match a string which ends in</option>
+			<option>Match a string which starts and ends in</option>
+		</select>
+		<br>
+		<br>
+		<label id="select_rules_label">Regular expressions consist of 1 or more rules. It generated GNU extended regular expressions. Use the buttons below to add or modify them : </label>
+		<br>
+		<ol  id="selectable_rules_list">
+		</ol>
+		<br>
+		<input type="button" value="Add rule" onclick="on_add_rule_clicked()">
+		<input type="button" value="Remove rule" onclick="on_remove_rule_clicked()">
+		<input type="button" value="Update rule" onclick="on_update_rule_clicked()">
+		<input type="button" value="Copy to clipboard" onclick="on_copy_to_clipboard_clicked()">
+		<p></p>
+		<p></p>
+		<p></p>
+		<div id="rule_dialog"  >
+			<select name="match_char_options" id="match_char_options">
+				<option selected="selected">Free text</option>
+				<option>any character</option>
+				<option>any letter a-z</option>
+				<option>any lowercase letter a-z</option>
+				<option>any uppercase letter A-Z</option>
+				<option>any digit 0-9</option>
+				<option>any ASCII word character</option>
+				<option>any whitespace</option>
+			</select>
+			<input type="text" name="rule_free_text" id="rule_free_text" value="">
+			<p></p>
+			<div>
+				<input type="radio" name="radio_rule" value="Exactly" checked>Exactly
+				<input type="text" name="radio_rule_exact_times" id="radio_rule_exact_times" value="1">time(s)
+				<br>
+				<input type="radio" name="radio_rule" value="OneOrMore"> 
+				<input type="text" name="radio_rule_one_or_more_times" id="radio_rule_one_or_more_times" value="1">or more time(s)
+				<br>
+				<input type="radio" name="radio_rule" value="Between">Between
+				<input type="text" name="radio_rule_between_start" id="radio_rule_between_start" value="0">and
+				<input type="text" name="radio_rule_between_end" id="radio_rule_between_end" value="1">times
+				<br>
+				<input type="radio" name="radio_rule" value="AnyNumber">Any number of times
+			</div> 
+		</div> 
+	</div>
+<script>
+  // The dialog object when adding regexp rules
+  var ruleDialog;
+  var ruleDialogMode=1; // 1 for adding , 2 for updating
+  // We store created data in this object
+  // A regexp data is combination of multiple rules
+  var regExpData;
+  // Default selections in the UI
+  var selectedRule = -1;
+  var current_match_string_selection = "Match a string which contains";
+  var current_match_char_selection = "Free text";
+  
+  function get_current_rule_regexp()
+  {
+    var current_rule_regexp = "";
+    
+    switch(current_match_char_selection)
+    {
+      case "Free text" :
+        current_rule_regexp = $('#rule_free_text').val();
+      break;
+      
+      case "any character" :
+        current_rule_regexp = ".";
+      break;
+      
+      case "any letter a-z" :
+        current_rule_regexp = "[a-zA-Z]";
+      break;
+      
+      case "any lowercase letter a-z" :
+        current_rule_regexp = "[a-z]";
+      break;
+      
+      case "any uppercase letter A-Z" :
+        current_rule_regexp = "[A-Z]";
+      break;
+      
+      case "any digit 0-9" :
+        current_rule_regexp = "\d/";
+      break;
+      
+      case "any ASCII word character" :
+        current_rule_regexp = "\w";
+      break;
+      
+      case "any whitespace" :
+        current_rule_regexp = "\s";
+      break;
+    }
+    
+    switch( $('input[name="radio_rule"]:checked').val() )
+    {
+      case "Exactly" :
+        if( $('#radio_rule_exact_times').val() != 1 )
+        {
+          current_rule_regexp += "{" + $('#radio_rule_exact_times').val() +  "}";
+        }
+      
+      break;
+      
+      case "OneOrMore" :
+        if( $('#radio_rule_one_or_more_times').val() == 1 )
+        {
+          current_rule_regexp += "+";
+        }
+        else
+        {
+          current_rule_regexp += "{" + $('#radio_rule_one_or_more_times').val() +  ",}";
+        }
+      break;
+      
+      case "Between" :
+        if( $('#radio_rule_between_start').val() == 0 &&  $('#radio_rule_between_end').val() == 1 )
+        {
+          current_rule_regexp += "?";
+        }
+        else
+        {
+          current_rule_regexp += "{" + $('#radio_rule_between_start').val() + "," + $('#radio_rule_between_end').val()  + "}";
+        }
+      break;
+      
+      case "AnyNumber" :
+        current_rule_regexp += "*";
+      break;
+      
+    }
+    return current_rule_regexp;
+  }
+  
+  function get_current_regexp()
+  {
+    var regexp = "/";
+    
+    if( regExpData.rule_array.length > 0 )
+    {
+      var starts_with = false;
+      var ends_in = false;
+      
+      switch(current_match_string_selection)
+      {
+        case "Match a string which starts with" :
+          starts_with = true;
+        break;
+        
+        case "Match a string which ends in" :
+          ends_in = true;
+        break;
+        
+        case "Match a string which starts and ends in" :
+          starts_with = true;
+          ends_in = true;
+        break;
+      }  
+      
+      if(starts_with == true )
+      {
+        regexp += "^";
+      }
+      
+      var num_rule_parts = regExpData.rule_array.length;
+      
+      for( var i = 0; i < num_rule_parts; i++ )
+      {
+        regexp += regExpData.rule_array[i];
+        
+        if( i < num_rule_parts-1 )
+        {
+          regexp += "|";
+        }
+      }
+      
+      if(ends_in == true )
+      {
+        regexp += "$";
+      }
+    }
+    
+    regexp += "/";
+    
+    return regexp;
+  }
+  
+  function update_ui_current_regexp_label()
+  {
+    var cur_regexp = get_current_regexp();
+    $("#current_regexp").text("Current regular expression : " + cur_regexp);
+  }
+    
+  function update_ui()
+  {
+    update_ui_current_regexp_label();
+  
+    var component = $('#selectable_rules_list');
+    component.empty();
+    
+    var num_rules = regExpData.rule_array.length;
+      
+    for( var i = 0; i<num_rules;i++ )
+    {
+        var new_rule = '<li class="ui-state-highlight"> ' +
+          regExpData.rule_array[i] + 
+          '</li>';
+      
+        component.append(new_rule);
+    }
+    selectedRule = -1;
+  }
+    
+  function on_add_rule_clicked()
+  {
+	ruleDialogMode = 1;
+	ruleDialog.dialog( "open" );
+  }
+    
+  function on_remove_rule_clicked()
+  {
+    if( selectedRule == -1 )
+    {
+      alert("No rule selected.");
+      return;
+    }
+    
+    $('#selectable_rules_list .ui-selected').removeClass('ui-selected')
+    regExpData.rule_array.splice(selectedRule,1); 
+    selectedRule=-1;
+    update_ui();
+  }
+  
+  function on_update_rule_clicked()
+  {
+    if( selectedRule == -1 )
+    {
+      alert("No rule selected.");
+      return;
+    }
+    
+	ruleDialogMode = 2;
+	reset_rule_dialog();
+	ruleDialog.dialog( "open" );
+  }
+  
+  function on_copy_to_clipboard_clicked()
+  {
+	var cur_regexp = get_current_regexp();
+	window.prompt("Copy to clipboard: Ctrl+C, Enter", cur_regexp);
+  }
+  
+  function on_rule_selected(index)
+  {
+    selectedRule = index;
+  }
+  
+  function on_rule_deselected(index)
+  {
+    selectedRule = -1;
+  }
+  
+  function on_rules_match_string_selected(selection)
+  {
+    current_match_string_selection = selection;
+    update_ui_current_regexp_label();
+  }
+  
+  function on_rules_match_char_selected(selection)
+  {
+    current_match_char_selection = selection;
+    if( current_match_char_selection == "Free text" )
+    {
+      $('#rule_free_text').show();
+    }
+    else
+    {
+      $('#rule_free_text').hide();
+    }
+  }
+  
+  function reset_rule_dialog()
+  {
+	current_match_char_selection = "Free text";
+	$('#rule_free_text').val("");
+	$('#radio_rule_one_or_more_times').val("");
+	$('#radio_rule_between_start').val("");
+	$('#radio_rule_between_end').val("");
+	$('input[name="radio_rule"]:checked').val("Exactly");
+	$('#match_char_options').val('Free text');
+	$("#match_char_options").selectmenu("refresh");
+	$('#rule_free_text').show();
+  }
+  
+  function initialise_ui()
+  {
+    $( "#selectable_rules_list" ).selectable({
+        stop: function() 
+        {
+      $( ".ui-selected", this ).each(function() {
+      var index = $( "#selectable_rules_list li" ).index( this );
+      on_rule_selected(index);
+      });
+        },
+      selecting: function(event, ui){
+          $( "#rules_selectable" ).removeClass("ui-unselected");
+      
+          if( $(".ui-selected, .ui-selecting").length > 2){
+                    $(ui.selecting).removeClass("ui-selecting");
+        }
+          },
+      unselected: function( event, ui ) {
+        on_rule_deselected();
+      }
+      });
+    $( "#match_string_options" ).selectmenu({
+         change: function( event, data ) {
+           on_rules_match_string_selected( data.item.value );
+         }
+       });
+	   
+	 ruleDialog = $( "#rule_dialog" ).dialog({
+      autoOpen: false,
+      height: 300,
+      width: 600,
+      modal: true,
+	  
+      buttons: {
+	   "Add / Update Rule": function() {
+		if( ruleDialogMode == 1) // Adding a rule
+		{
+			regExpData.rule_array.push(get_current_rule_regexp());
+			selectedRule++;
+		}
+		else // Updating a rule
+		{
+			regExpData.rule_array[selectedRule] = get_current_rule_regexp();
+		}
+		update_ui();
+		ruleDialog.dialog( "close" );
+      },
+      Cancel: function() {
+        ruleDialog.dialog( "close" );
+      }
+	  
+    }});
+	
+	$( "#match_char_options" ).selectmenu({
+         change: function( event, data ) {
+           on_rules_match_char_selected( data.item.value );
+         }
+       });
+  }
+    
+  /*
+  Entry point
+  */
+  $( function() 
+  {
+    initialise_ui();
+    regExpData = { rule_array:[], };
+  });
+   
+</script>
+</body>
+</html>

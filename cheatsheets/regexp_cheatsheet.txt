@@ -1,0 +1,123 @@
+------------------------------------------------------------------------ REGULAR EXPRESSION GRAMMARS 
+
+POSIX Basic Regular Expressions :
+				http://www.regular-expressions.info/posix.html   
+				Does not support alternation ( | operator for "or"ing expressions )
+				
+GNU Basic Regular Expressions :
+				http://www.regular-expressions.info/gnu.html#bre
+				Tools using it : grep ed sed
+				As an addition to POSIX BRE supports alternation
+				
+
+POSIX Extended Regular Expressions :
+				http://www.regular-expressions.info/posix.html   
+				Supports alternation , does not support backtracing
+				
+GNU Extended Regular Expressions :
+				http://www.regular-expressions.info/gnu.html#ere
+				Tools using it : egrep awk emacs
+				As an addition to POSIX ERE supports unadorned paranthesis : .{2} -> any characer two times
+				
+------------------------------------------------------------------------ C++ 11 SUPPORT REGULAR EXPRESSION GRAMMARS
+
+See http://en.cppreference.com/w/cpp/regex/syntax_option_type for reference :
+
+ECMA-262 (ECMAScript) regular expressions (slightly modified?)
+Basic POSIX regular expressions
+Extended POSIX regular expressions
+awk regular expressions
+grep regular expressions
+egrep regular expressions
+
+------------------------------------------------------------------------ GREP
+
+grep search_pattern file_pattern
+
+* search_pattern
+		"specific_string"
+		"regular_expression"
+
+* file_pattern
+		specific_file_name
+		file_pattern like *.txt
+
+* modifiers :
+			-i		case insensitive 
+			-r      search files recursively
+			-w		search for exact word
+			-A <N>	display N lines after match
+			-B <N>	display N lines before match
+			-C <N>	display N lines around match
+			-v		invert matching
+			-v -e	display the lines that do not match
+			-c      count number of matches
+			-l      display only the file names that matches pattern
+			-o		display column and line number of the match
+			-n      display line number
+			
+* environment variables :
+			
+			export GREP_OPTIONS='--color=auto' GREP_COLOR='100;8'	highlights matched strings
+
+------------------------------------------------------------------------ GREP FOR WINDOWS
+
+http://www.wingrep.com/
+			
+------------------------------------------------------------------------ GNU Extended Regular Expressions 
+
+( ) 		grouping
+|			pipe or operator ( alternation )
+
+Ex : (...)	  |	(...)		match group A or B
+      group A    group B
+	  
+Ex : (...)	  	(...)		match group A and B
+      group A    group B
+	  
+Ex : (...)	  	(?=...)		matches group A if only followed by g
+      group A    group B
+	  
+Ex : (...)	  	(?!...)		matches group A only if not followed by group B
+      group A    group B
+	  
+^			Anchor  , like not operator , excludes characters
+
+/() /		match a string contains ()
+/^ () /     match a string starts with
+/() $/     	match a string ends with
+/^ () $ /   match a string starts and ends with
+
+* Global modifiers :
+	/   .... / i		case insensitive
+	/   .... / m		match across new lines
+	/   .... / g		greedy , find all matches
+	
+*Types
+
+	Free text		as is			/aaa/		match a string contains aaa
+	any character	.
+	any letter		[a-zA-Z]
+	any lower case	[a-z]
+	any upper case	[A-Z]
+	
+	any digit		\digit
+	any ascii		\w
+	whitespace		\s
+	non-whitespace	\S
+	
+* Type specifiers & quantifiers
+
+	Any char exactly 1 time /./
+	Any char 2 times only /.{2}/
+	
+	Any char 1 or more  /.+/
+	Any char 2 or more  /.{2,3}/
+	Any char between X and Y  times /.{x,y}
+	any character any number of times /.?/
+	
+** Example IPV4
+
+	/(\d{1,3}.) {3} \d{1,3}/
+
+------------------------------------------------------------------------

@@ -1,0 +1,376 @@
+################################################################
+#OS info
+uname -a
+################################################################
+#Processes , also see lsof and strace categories
+ps -ef                                  # e: all processes , f: full info
+kill -signal_number pid                 # send a signal to a specific process
+kill -9  pid                            # 9 is for killing by force
+top                                     # By default top command displays the processes in the order of CPU usage
+top + M                                 # instead of cpu , they will be sorted by memory usage
+top + P                                 # sort by cpu
+top + < >                               # switch between different sort options
+nice -n 10 sort input.txt > output.txt  # setting NICENESS value , negative values have higher priority So it doesnt slow down the system
+ulimit -s                               # to see max thread stack size
+################################################################
+#Important signals
+#Signal     Portable number     Default Action          Description
+SIGABRT     6                   Terminate (core dump)   Process abort signal
+SIGALRM     14                  Terminate               Alarm clock
+SIGBUS      n/a                 Terminate (core dump)   Access to an undefined portion of a memory object
+SIGCHLD     n/a                 Ignore                  Child process terminated, stopped, or continued.
+SIGCONT     n/a                 Continue                Continue executing, if stopped.
+SIGFPE      n/a                 Terminate (core dump)   Erroneous arithmetic operation.
+SIGHUP      1                   Terminate               Hangup.
+SIGILL      n/a                 Terminate (core dump)   Illegal instruction.
+SIGINT      2                   Terminate               Terminal interrupt signal.
+SIGKILL     9                   Terminate               Kill (cannot be caught or ignored).
+SIGPIPE     n/a                 Terminate               Write on a pipe with no one to read it.
+SIGPOLL     n/a                 Terminate               Pollable event.
+SIGPROF     n/a                 Terminate               Profiling timer expired.
+SIGQUIT     3                   Terminate (core dump)   Terminal quit signal.
+SIGSEGV     n/a                 Terminate (core dump)   Invalid memory reference.
+SIGSTOP     n/a                 Stop                    Stop executing (cannot be caught or ignored).
+SIGSYS      n/a                 Terminate (core dump)   Bad system call.
+SIGTERM     15                  Terminate               Termination signal.
+SIGTRAP     n/a                 Terminate (core dump)   Trace/breakpoint trap.
+SIGTSTP     n/a                 Stop                    Terminal stop signal.
+SIGTTIN     n/a                 Stop                    Background process attempting read.
+SIGTTOU     n/a                 Stop                    Background process attempting write.
+SIGUSR1     n/a                 Terminate               User-defined signal 1.
+SIGUSR2     n/a                 Terminate               User-defined signal 2.
+SIGURG      n/a                 Ignore                  High bandwidth data is available at a socket.
+SIGVTALRM   n/a                 Terminate               Virtual timer expired.
+SIGXCPU     n/a                 Terminate (core dump)   CPU time limit exceeded.
+SIGXFSZ     n/a                 Terminate (core dump)   File size limit exceeded
+################################################################
+#Strace , syscall tracing
+strace -o output.txt executable # to monitor syscalls of a process by starting it
+strace -o output.txt -tp pid    # p : attaching to a process t : time for each calls
+strace -e open executable       # monitor only open calls
+################################################################
+#lsof
+lsof                    # list all open files belonging to all processes
+lsof filename           # list processes that opened a specific file
+lsof +d /var/log        # list processes that opened any file under /var/log
+lsof -p pid             # list all open files for a specific process 
+lsof -c process_name    # list all open files opened by a specific process
+lsof -u user_name       # list all open files opened by a specific user
+lsof -i -p pid          # list all network connection of a specific process
+lsof -i :port_number    # list processes that listen to a specific port
+lsof -i tcp             # list all tcp connections
+lsof -i udp             # list all udp connections
+################################################################
+#Binaries , native executables , shared objects
+nm executable                                           # list symbols , U means unresolved
+strip -s executable                                     # strips symbols
+ldd executable                                          # shared object dependencies
+strings executable                                      # lists strings in an executable
+objdump -S --disassemble executable > executable.dump   # to get assembly output
+ltrace executable                                       # Can monitor which shared objects and system calls are being used
+ldconfig -p                                             # shows all shared objects that is available to g++...
+################################################################
+#Source code formatting with dos2unix and sed
+find . -name \*.cpp -o -name \*.hpp -o -name \*.h | xargs dos2unix                      # Converting all files to UNIX format
+find . -name \*.cpp -o -name \*.hpp -o -name \*.h | xargs sed -i $'s/\t/    /g'         # Converts TABs to 4 spaces + add .orig after -i to save original files
+find . -name \*.cpp -o -name \*.hpp -o -name \*.h | xargs sed -i '' -e's/[ \t]*$//'     # Removes all trailing whitespace
+################################################################
+#Memory
+free -m                             # m: for megabytes
+vmstat -s                           # virtual memory statistics , m: statistics
+dmidecode -t 17                     # RAM Information
+ps auxf | sort -nr -k 4 | head -10  # Display top 10 memory consuming processes
+################################################################
+#IPC
+ipcs -m             # shared memory info
+ipcs -s             # semaphores info
+mkfifo /tmp/fifo    # created a named pipe called fifo under /tmp
+cat < /tmp/fifo     # to read from  a named pipe 
+cat > /tmp/fifo     # to write to a named pipe
+rm /tmp/fifo        # to remove named pipe
+################################################################
+#Remote Bash Script Execution
+ssh HOST ‘bash –s ‘ < local_script.sh # execute local_script.h in remote
+################################################################
+#Proc file system
+#
+#/proc is a window into the running Linux kernel. 
+# Files in the /proc file system don’t correspond to actual files on a physical device.
+# They are generated on the fly by the Linux kernel when you read from the file :
+cat /proc/cpuinfo   #processor info
+cat /proc/version   #linux kernel info
+cat /proc/meminfo   #memory info
+cat /proc/uptime    #uptime 
+/proc/self          #current process symbolic link
+#You can also change the configuration of the running kernel by writing to certain files in the /proc file system
+#
+#The /proc file system contains a directory entry for each process running on the
+#GNU/Linux system.The name of each directory is the process ID of the corresponding process
+#Directory contents :
+cmdline		arguments
+environ		environment of the process
+cwd			current working directory
+exe			symbolic link to the executable
+stat		contains info
+################################################################
+#Network , also see tcpdump and lsof
+neststat -c             # contiounsly show all connections
+netstat -a              # list all ports , both open and non listening
+netstat -at             # list all tcp ports
+netstat -au             # list all udp ports
+netstat -l              # list listening sockets 
+netstat -s              # show all protocol statistics
+netstat -ap | grep ssh  # finding out on which port ssh is running
+netstat -i              # show list of network interfaces
+################################################################
+#tcpdump , network sniffer
+tcpdump -i eth0                 # capture packets from a particular nw interface
+tcpdump -A                      # display captured packets in ascii
+tcpdump -XX                     # display captured packets in hex and ascii
+tcpdump -w saved.pcap           # save capture to a file
+tcpdump -r saved.pcap           # read a saved file
+tcpdump tcp                     # capture only tcp  
+tcpdump udp                     # capture only udp
+tcpdump port port_number        # capture from a particular port
+tcpdump dst ip and port port_number # capture packets with a particular destination and port number
+################################################################
+#Sysctl
+sysctl -a                           # Lists all kernel parameters
+sysctl -A                           # Lists all kernel parameters in table form
+sysctl kernel.sysrq                 # Gets value of kernel.sysrq
+sysctl -w kernel.sysrq="1"          # To set value kernel.sysrq as 10
+echo 1 > /proc/sys/kernel/sysrq     # Same as above , without sysctl , via proc fs
+# To preserve custom settings, add them to the /etc/sysctl.conf file.
+################################################################
+#Permissions & SE & ACLs
+whoami                      # which user i am
+# Alpha notation : something like rwxrw-r--
+# first 3 is User , then Group , then the file Owner
+chown   user:group file     # changes ownership
+chmod ug+w file             # changes permissions , u:user g:group +w: write permission
+#If you want to go numerically :
+#    1   =   execute only
+#    2   =   write only
+#    3   =   write and execute (1+2)
+#    4   =   read only
+#    5   =   read and execute (4+1)
+#    6   =   read and write (4+2)
+#    7   =   read and write and execute (4+2+1)
+#                     user    group   others
+chmod 640 file1       rw-     r--     ---
+chmod 754 file1       rwx     r-x     r--
+chmod 664 file1       rw-     rw-     r--
+################################################################
+#SSH Setup
+ssh-keygen          # creates pub and private keys
+# you have to setup permissions
+chown root private key 
+chmod 700 private key 
+#Then you add key file
+ssh-add private key file
+ssh-add -l          # to verify that we added 
+nmap localhost      # to see open ports , it has to be 22
+invoke ssh-agent    # at least once to export
+#if it is debian , doenst apply to centos
+apt-get install ssh 
+service ssh start
+################################################################
+#Symbolic links
+ln originalfile link    # hard link
+ln -s originalfile link # soft link
+################################################################
+#Environment variables
+echo $SHELL             #Outputs env variable with name Shell
+MYNAME="Darth Vader"    #We setup an env variable for a session
+#if you want to make it persistent, just put it into ~/.bash_profile file
+LD_PRELOAD              # Environment variable used for to allow programs to hijack so loading
+PATH                    # Environment variable , gives you colon seperated list of command-search paths
+################################################################
+#Bash shell configuration
+~/.bash_profile or ~/.bash_login    # Will be read when we login
+~/.bash_logout                      # Will be executed when we logout
+################################################################
+#Daemons
+#Shell scripts stored in /etc/init.d directory are used to start and stop daemons.
+service --status-all                # all running daemons
+service daemon-name-here start      # start
+service daemon-name-here stop       # stop
+service daemon-name-here restart    # restart
+################################################################
+#Finding files
+find ~/Documents -name "some.jpg"
+find . -type f -name \*.cpp | egrep -v '^*dependencies*' # Find files (-type f) with a cpp extension but ignore results that contain dependencies
+# -> wildcard characters
+# *  zero or more characters
+# ?  only one character
+# [] any characters between the list
+################################################################
+#Monitoring a single file
+tail -f logfile.txt
+################################################################
+#File system monitoring with inotify
+#
+#To use inotify, you must have a Linux machine with kernel 2.6.13 or later. 
+#(Prior versions of the Linux kernel use a far less capable file monitor called dnotify). 
+#If you don't know the version of your kernel, go to the shell :
+#% uname -a
+#
+#Suppose we want to check for filesystem actions inside the directory /srv/test we can just run
+#
+inotifywait -rme modify,attrib,move,close_write,create,delete,delete_self /srv/test
+################################################################
+#Search text in files
+cd /path/to/dir
+grep -r "word" 
+################################################################
+# Xargs usage , find files and delete them
+find . -name \*.gcno -o -name \*.gcda | xargs rm -f
+################################################################
+# tar files 
+tar -zxvf stuff.tar.gz
+#c  create archive
+#x  extract
+#f filename
+#v verbose
+#z gzip
+################################################################
+#Files , navigation
+#.  parent
+#.. parent of parent
+#/  root dir
+#~  user home dir
+ls -la # l: list,  a: hidden files
+rm -rf # r : recursive f: force
+mv current_file new_file_name 
+cp file destination # -r to make it recursive
+touch
+stat
+################################################################
+#Files types
+device files
+	block special device
+	character special device
+	# Unix makes a distinction between character devices and block devices. 
+	# character devices provide only a serial stream of input or output mice-keyboards-serial modems...
+	# block devices are randomly accessible harddisk - cdrom...
+directories
+named pipes ( ipc )
+symbolic link  ( soft links )
+sockets ( nw/ipc )
+door ( ipc specifc to solaris )
+ordinary files
+		text file
+		binary data ( image )
+		executable image
+		...
+# Use ls -F (fancy listing) or ls -l (long listing) to see file types :
+"d" = directory
+"l" = link
+"p" = pipe
+"b" = block special device
+"c" = character special device
+"s" = socket
+################################################################
+#Device types under /dev
+# 2 device types :
+# 		1. character : non fixed size  streams, serial port etc
+#		2. block : fixed size stream like harddisk  /dev/hda ...
+# Also there is special kernel devices ( pseudo devices ) : 
+/dev/null 	    # Accepts and discards all input; produces no output. 
+/dev/zero 	    # Accepts and discards all input; produces a continuous stream of NULL (zero value) bytes. 
+/dev/full 		#Produces a continuous stream of NULL (zero value) bytes when read, and returns a "disk full" message when written to. 
+/dev/random 	#Produces a variable-length stream of pseudo-random or truly random numbers. (Blocking) 
+/dev/urandom 	#Produces a variable-length stream of pseudo-random numbers. (Non-Blocking)
+# There is also terminal devices : tty and pty
+A tty is a terminal (it stands for teletype - the original terminals used a line printer for output and a keyboard for input). 
+A terminal is a basically just a user interface device that uses text for input and output.
+
+A pty is a pseudo-terminal - it is a software implementation that appears to the attached program like a terminal, 
+but instead of communicating directly with a "real" terminal, it transfers the input and output to another program.
+
+For example, when you ssh in to a machine and run ls, the ls command is sending its output to a pseudo-terminal, 
+the other side of which is attached to the SSH daemon
+
+Linux creates a PTY for every new terminal window you open and displays a corresponding
+entry in /dev/pts
+################################################################
+#Linux clocks :
+CLOCK_REALTIME	Represents 	wall-clock time. Can be both stepped and slewed by time adjustment code (e.g., NTP, PTP).
+CLOCK_REALTIME_COARSE		A lower-resolution version of CLOCK_REALTIME.
+CLOCK_REALTIME_HR			A higher-resolution version of CLOCK_REALTIME. Only available with the real-time kernel.
+CLOCK_MONOTONIC				Represents the interval from an abitrary time. Can be slewed but not stepped by time adjustment code. As such, it can only move forward, not backward.
+CLOCK_MONOTONIC_COARSE		A lower-resolution version of CLOCK_MONOTONIC.
+CLOCK_MONOTONIC_RAW			A version of CLOCK_MONOTONIC that can neither be slewed nor stepped by time adjustment code.
+CLOCK_BOOTTIME				A version of CLOCK_MONOTONIC that additionally reflects time spent in suspend mode. Only available in newer (2.6.39+) kernels.
+################################################################
+#Harddrive
+df #(disk free space )
+df #-h ( human readable version )
+################################################################
+#CentOS Package management
+yum install epel-release    # it is a quite useful repository
+yum search package_name
+yum install package
+rpm -Uvh x.rpm              # installing an RPM manually
+################################################################
+#Debian Package management
+apt-get update              # update installed software
+apt-get install xxx         # to install xxx
+apt-get source xxx          # to download source of xxx
+dpkg --get-selections       # to see packages installed
+sudo dpkg -i DEB_PACKAGE    # manually installing a DEB
+sudo dpkg -r PACKAGE_NAME   # manually removing a DEB
+################################################################ DAEMONS
+#HOW TO INSTALL A DAEMON
+#
+#	Shell scripts stored in /etc/init.d directory are used to start and stop daemons.
+#
+#HOW TO SEE ALL RUNNING DAEMONS
+service --status-all	
+#HOW TO CONTROL DAEMONS
+service daemon-name-here start
+service daemon-name-here stop
+service daemon-name-here restart
+#In this example, start, stop, and restart httpd daemon:
+service httpd start
+service httpd stop
+service httpd restart
+################################################################
+#Standard streams (stdin stdout stderr) and creating other streams and piping
+stdin :  in proc it is /dev/stdin , default is keyboard , channel index is 0, used with < or <0 as it is input
+stdout :  in proc it is /dev/stdout , defailt is screen , channel index is 1, used with 1> or > as it is output
+stderr: in proc it is /dev/stdout , default error buffer , channel index is 2 , used with 2> as it is output
+ls -la > output.txt 							# write file contents to the output file
+cat input.txt >> output.txt  					# append contents of input file to the output file
+(sort < /tmp/unsorted.txt) > /tmp/sorted.txt 	# send unsorted file contents to sort binary , then output it to sorted.txt
+find / -name ls 2> /dev/null  					# route errors to /dev/null to avoid them
+command 2>&1 , redirect channel 2 ( stderr ) to channel 1 ( stdout )
+command >file 2>&1 								# redirect errors from a command first to a file then to stderr
+exec 3<> stream3 && echo "Hello" >&3 && cat stream3 # first create a new stream on channel 3, then redirect its out from stdout to this new stream, then show contents of stream 3
+ps -ef | grep string_to_Seacrch 				# piping , direct outputs of ps , then make a search in those outputs with grep, shell will fork each command and provide piping IPC between processes
+ps aux | less 									# send ps outputs to less, so less gives pagination support
+################################################################
+#You can do while loops
+$ while true
+> do
+>    echo "hello"
+>    sleep 2
+> done
+# Logical operators  to run multiple commands : || && 
+make clean && make && ./executable
+# This is exactly logical and operator , therefore this single execution will return
+# You could also use || operator
+################################################################
+#Misc
+hwloc & lstopo # excellent cross platform tool , produces graph of processor topology 
+#You can find exact location of commands with:
+where
+whichis
+#To get paging support in list views
+ps aux | less
+################################################################
+#GCC
+gcc --version   # Version of GCC
+cpp -v          # GCC default include paths
+LIBRARY_PATH    # Environment variable , library search paths
+################################################################
