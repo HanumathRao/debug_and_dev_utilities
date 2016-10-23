@@ -11,6 +11,9 @@ of memdump.py. You can use memleak.sh to detect memory leaks at one go as it cal
 
 Detailed blog article : https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
 
+**cpp_reflection_tool :** It is  simple Python script which uses Clang , in order to create a header file
+with metadata of target source file.
+
 **multithreaded_stock_quotes ( Python / C# / Powershell ):** It is for querying stock quotes on multicore systems using Yahoo Finance API. It has been implemented seperately in Python (2.7) , C# and also as a standalone Powershell script which uses C# code. C# code can also run on Linux ( Mono ). A makefile for Mono/Linux is provided. Also you can use a bat file for Windows C# version which compiles and runs the project in command line by using C# compiler that is shipped with Windows.
 
 **http_file_server_and_regexp_tool ( Python & Powershell & Javascript):** Python and Powershell implementations have a minimal HTTP server that serves a single file. And regexp tool is written in Javascript using JQueryUI. It generates extended GNU regular expressions. Using together gives us a tool that works via browser.
@@ -20,5 +23,7 @@ Detailed blog article : https://nativecoding.wordpress.com/2016/07/31/gdb-debugg
 **multiprocess ( Python / Bash / Powershell ) :** It has multiprocessing templates. Python have 2 implementations with subprocesses and threads.
 
 **source_code_formatter ( Bash ):** Linux Bash script that acts on cpp,h,hpp files by default , it converts Windows EOLs to Unix, converts tabs to 4 spaces and removes trailing whitespace
+
+**simple_benchmarker ( Bash ):** benchmark.sh executes target programs and calculates statistics. You can run benchmark.sh on Windows by using GitBash. GitBash is a Mingw based Bash console for Windows : https://git-for-windows.github.io/
 
 **cheatsheets :** GDB ,  Windbg , Linux commands, Windows batch files , regular expression
