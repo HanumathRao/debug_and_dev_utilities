@@ -1,8 +1,8 @@
+
 #ifndef _REFLECTION_HPP_
 #define _REFLECTION_HPP_
 
 #include <typeinfo>
-#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -10,54 +10,52 @@ enum class AccessSpecifier { PRIVATE, PROTECTED, PUBLIC };
 
 struct Member
 {
+  std::string m_className;
   AccessSpecifier m_accessSpecifier;
   std::string m_name;
   std::string m_type;
 };
 
-using ReflectionContainer = std::unordered_map<std::string, std::vector<Member>>;
-
 class Reflection
 {
-  public:
+public:
 
-    static std::vector<std::string> GetClassNames()
+  static std::vector<std::string> GetClassNames()
+  {
+    std::vector<std::string> classes;
+    for (auto& classData : m_classes)
     {
-      std::vector<std::string> classes;
-      for (auto& classData : m_members)
-      {
-        classes.push_back(classData.first);
-      }
-      return classes;
+      classes.push_back(classData);
     }
+    return classes;
+  }
 
-    static std::vector<Member> GetMembers(const std::string& className)
+  static std::vector<Member>  GetMembers(const std::string& className)
+  {
+    std::vector<Member> ret;
+    auto length = className.length();
+    for (auto& classData : m_members)
     {
-      std::vector<Member> ret;
-      for (auto& classData : m_members)
+      if (className.compare(0, length, classData.m_className, 0, length) == 0)
       {
-        if (classData.first == className)
-        {
-          ret = classData.second;
-          break;
-        }
+        ret.push_back(classData);
       }
-      return ret;
     }
+    return ret;
+  }
 
-
-  private :
-    static ReflectionContainer m_members;
-	  static std::vector<std::string> m_classes;
+private:
+  static std::vector<Member> m_members;
+  static std::vector<std::string> m_classes;
 };
 
-ReflectionContainer Reflection::m_members = 
+std::vector<Member> Reflection::m_members =
 {
-  { "Foo " , {{ AccessSpecifier::PRIVATE, "m1 ", "int"}}},{ "Foo " , {{ AccessSpecifier::PUBLIC, "m2 ", "int"}}},{ "Foo " , {{ AccessSpecifier::PUBLIC, "f1 ", "method"}}},
+  { "Foo" , AccessSpecifier::PRIVATE, "m1 ", "int"},{ "Foo" , AccessSpecifier::PUBLIC, "m2 ", "int"},{ "Foo" , AccessSpecifier::PUBLIC, "f1 ", "method"},
 };
 
-std::vector<std::string> Reflection::m_classes = 
-{ 
+std::vector<std::string> Reflection::m_classes =
+{
   "Foo" , 
 };
 

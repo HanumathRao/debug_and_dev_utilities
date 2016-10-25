@@ -185,7 +185,7 @@ class CppReflectionSourceGenerator(CppAstWalker):
             currentClassName = classEntry.name
             classesCode = classesCode + "\"" + currentClassName +"\" , "
             for memberEntry in classEntry.members:
-                memberTemplate = Template("{ \"$CLASS_NAME \" , {{ AccessSpecifier::$ACCESS_SPECIFIER, \"$MEMBER_NAME \", \"$MEMBER_TYPE\"}}},")
+                memberTemplate = Template("{ \"$CLASS_NAME\" , AccessSpecifier::$ACCESS_SPECIFIER, \"$MEMBER_NAME \", \"$MEMBER_TYPE\"},")
                 memberCode = memberTemplate.substitute(CLASS_NAME = currentClassName ,ACCESS_SPECIFIER=MemberAccessSpecifier.getAccessSpecifierAsString(memberEntry.access_specifier).upper(), MEMBER_NAME=memberEntry.name, MEMBER_TYPE=memberEntry.type )
                 membersCode = membersCode + memberCode
         with open('reflection.template', 'r') as templateFile:
