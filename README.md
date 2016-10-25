@@ -9,10 +9,12 @@ In this repository I will collect various utility scripts/code and sone cheatshe
 with their information ( arguments, callstacks and return value) by automating GDB. Memleak.py detects memory leaks analyzing output
 of memdump.py. You can use memleak.sh to detect memory leaks at one go as it calls both memdump.py and memleak.py.
 
-Detailed blog article : https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
+Detailed blog post : https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
 
 **cpp_reflection_tool :** It is  simple Python script which uses Clang , in order to create a header file
 with metadata of target source file.
+
+Detailed blog post : http://austinbrunkhorst.com/blog/category/reflection/
 
 **multithreaded_stock_quotes ( Python / C# / Powershell ):** It is for querying stock quotes on multicore systems using Yahoo Finance API. It has been implemented seperately in Python (2.7) , C# and also as a standalone Powershell script which uses C# code. C# code can also run on Linux ( Mono ). A makefile for Mono/Linux is provided. Also you can use a bat file for Windows C# version which compiles and runs the project in command line by using C# compiler that is shipped with Windows.
 
