@@ -5,13 +5,13 @@ http://en.wikipedia.org/wiki/Public_domain_software
 
 In this repository I will collect various utility scripts/code and sone cheatsheets.
 
-**memory_leak_detector ( Python / GDB Automation):** memdump.py is a GDB extension written in Python. It dumps all memory operations done by GNU LibC Runtime ( malloc, realloc, calloc and free),
+**memory_leak_detector ( Python ):** memdump.py is a GDB extension written in Python. It dumps all memory operations done by GNU LibC Runtime ( malloc, realloc, calloc and free),
 with their information ( arguments, callstacks and return value) by automating GDB. Memleak.py detects memory leaks analyzing output
 of memdump.py. You can use memleak.sh to detect memory leaks at one go as it calls both memdump.py and memleak.py.
 
 Detailed blog post : https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
 
-**cpp_reflection_tool :** It is  simple Python script which uses Clang , in order to create a header file
+**cpp_reflection_tool ( Python ) :** It is  simple Python script which uses Clang , in order to create a header file
 with metadata of target source file.
 
 Detailed blog post : https://nativecoding.wordpress.com/2016/10/25/c-reflection-using-clang/
@@ -28,4 +28,4 @@ Detailed blog post : https://nativecoding.wordpress.com/2016/10/25/c-reflection-
 
 **simple_benchmarker ( Bash ):** benchmark.sh executes target programs and calculates statistics. You can run benchmark.sh on Windows by using GitBash. GitBash is a Mingw based Bash console for Windows : https://git-for-windows.github.io/
 
-**cheatsheets :** GDB ,  Windbg , Linux commands, Windows batch files , regular expression
+**cheatsheets :** GDB ,  Windbg , Linux commands, Windows batch files , regular expressions
