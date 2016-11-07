@@ -1,3 +1,1 @@
-**benchmark.sh :** Uses Bash date command to measure the time. Example output :
-
-<img src="https://github.com/akhin/utilities/tree/master/simple_benchmarker/benchmark_output.png">
+**benchmark.sh :** Uses Bash date command to measure the time.
