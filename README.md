@@ -1,6 +1,8 @@
 Licence : All samples are "Public Domain" code 
 http://en.wikipedia.org/wiki/Public_domain_software
 
+https://img.shields.io/badge/LICENCE-PUBLIC%20DOMAIN-green.svg
+
 ===========================================================================
 
 In this repository I will collect various utility scripts/code and sone cheatsheets.
