@@ -2,7 +2,7 @@
 
 ===========================================================================
 
-In this repository I will collect various utility scripts/code and sone cheatsheets.
+In this repository I will collect various utility scripts/code and some cheatsheets.
 
 **memory_leak_detector ( Python ):** memdump.py is a GDB extension written in Python. It dumps all memory operations done by GNU LibC Runtime ( malloc, realloc, calloc and free),
 with their information ( arguments, callstacks and return value) by automating GDB. Memleak.py detects memory leaks analyzing output
