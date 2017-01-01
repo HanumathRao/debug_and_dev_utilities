@@ -1,0 +1,10 @@
+In Windows 10
+
+	- enable developer mode
+	- turn on windows feature : linux subsystem for windows 
+	
+Then you get "ubuntu on windows"
+
+- you get full bash
+- all linux executables work
+- you can do everything you can do on ubuntu such as apt-get s
