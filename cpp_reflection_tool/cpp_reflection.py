@@ -138,7 +138,7 @@ class CppReflectionSourceGenerator(CppAstWalker):
             if node.access_specifier.name is "PUBLIC":
                 self.currentAccessSpecifier = MemberAccessSpecifier.public
             if node.access_specifier.name is "PROTECTED":
-                self.currentAccessSpecifier.name = MemberAccessSpecifier.protected
+                self.currentAccessSpecifier = MemberAccessSpecifier.protected
         if node.kind is clang.cindex.CursorKind.FIELD_DECL:
             classCount = len(self.classes)
             name = node.spelling
