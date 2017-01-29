@@ -40,11 +40,15 @@ for /f "delims=#" %%P in (install.cfg) do (
 
 REM COPYING FILE BY OVERWRITING
 REM copy /y file destination_directory
+
 REM DELETE FILE IF EXISTS
 REM IF EXIST %TARGET% del /F %TARGET%
 
 REM EXECUTING A POWERSHELL SCRIPT
 powershell.exe -executionpolicy bypass -file ./target_script.ps1
+
+REM replacing text in a file via powershell
+powershell -Command "(gc file.txt ) -replace 'foo', 'bar' | Out-File file.txt"
 
 REM Exit Point
 REM Press a key to exit
