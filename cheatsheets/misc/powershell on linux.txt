@@ -1,8 +1,0 @@
-	SETUP ON CENTOS
-
-1. Get rpm from : 
-https://github.com/PowerShell/PowerShell/releases/tag/v6.0.0-alpha.9
-
-2. sudo yum install powershell-6.0.0_alpha.9-1.el7.centos.x86_64.rpm
-
-Note : Currently you cant use inline C# in Powershell for Linux
