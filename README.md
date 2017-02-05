@@ -21,8 +21,6 @@ Detailed blog post : https://nativecoding.wordpress.com/2016/10/25/c-reflection-
 
 **tcp_client_server ( Python / Bash / Powershell ) :** Linux Bash scripts tested on Debian and Linux TCP server requires netcat utility. Windows Powershell scripts uses .Net Framework. Python server uses SocketServer.
 
-**multiprocess ( Python / Bash / Powershell ) :** It has multiprocessing templates. Python have 2 implementations with subprocesses and threads.
-
 **source_code_formatter ( Bash ):** Linux Bash script that acts on cpp,h,hpp files by default , it converts Windows EOLs to Unix, converts tabs to 4 spaces and removes trailing whitespace
 
 **simple_benchmarker ( Bash ):** benchmark.sh executes target programs and calculates statistics. You can run benchmark.sh on Windows by using GitBash. GitBash is a Mingw based Bash console for Windows : https://git-for-windows.github.io/
