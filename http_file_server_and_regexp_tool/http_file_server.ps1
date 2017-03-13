@@ -1,4 +1,4 @@
-param([string]$file="regexp_tool.htm", [int]$port=8080)
+param([string]$file="conf_tool.htm", [int]$port=8081)
 
 Clear-Host
 Set-Location $PSScriptRoot
@@ -24,16 +24,28 @@ while ($web_server.IsListening)
 {
     $context = $web_server.GetContext()
     $response = $context.Response
-    
+
+    [string]$http_method = $context.Request.HttpMethod.ToString()
     [string]$requested_url = $context.Request.Url
-    
     Write-Host ''
     Write-Host "> $requested_url"
-    
-    $response.ContentLength64 = $FILE_BUFFER.Length
-    $response.OutputStream.Write($FILE_BUFFER, 0, $FILE_BUFFER.Length)
-    $response.Close()
-    
+
+    if( $http_method.ToUpper() -eq "GET" )
+    {
+        Write-Host ""
+        Write-Host "Handling GET METHOD"
+        Write-Host ""
+        $response.ContentLength64 = $FILE_BUFFER.Length
+        $response.OutputStream.Write($FILE_BUFFER, 0, $FILE_BUFFER.Length)
+        $response.Close()
+    }
+    else
+    {
+        Write-Host ""
+        Write-Host ( "Non supported verb : " + $http_method.ToUpper() )
+        Write-Host ""
+    }
+
     $responseStatus = $response.StatusCode
     Write-Host "< $responseStatus"
 }
