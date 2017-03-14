@@ -17,12 +17,4 @@ Detailed blog post : https://nativecoding.wordpress.com/2016/10/25/c-reflection-
 
 **multithreaded_stock_quotes ( Python / C# / Powershell ):** It is for querying stock quotes on multicore systems using Yahoo Finance API. It has been implemented seperately in Python (2.7) , C# and also as a standalone Powershell script which uses C# code. C# code can also run on Linux ( Mono ). A makefile for Mono/Linux is provided. Also you can use a bat file for Windows C# version which compiles and runs the project in command line by using C# compiler that is shipped with Windows.
 
-**http_file_server_and_regexp_tool ( Python & Powershell & Javascript):** Python and Powershell implementations have a minimal HTTP server that serves a single file. And regexp tool is written in Javascript using JQueryUI. It generates extended GNU regular expressions. Using together gives us a tool that works via browser.
-
-**tcp_client_server ( Python / Bash / Powershell ) :** Linux Bash scripts tested on Debian and Linux TCP server requires netcat utility. Windows Powershell scripts uses .Net Framework. Python server uses SocketServer.
-
-**source_code_formatter ( Bash ):** Linux Bash script that acts on cpp,h,hpp files by default , it converts Windows EOLs to Unix, converts tabs to 4 spaces and removes trailing whitespace
-
 **simple_benchmarker ( Bash ):** benchmark.sh executes target programs and calculates statistics. You can run benchmark.sh on Windows by using GitBash. GitBash is a Mingw based Bash console for Windows : https://git-for-windows.github.io/
-
-**cheatsheets :** GDB ,  Windbg , Linux commands, Windows batch files , regular expressions
