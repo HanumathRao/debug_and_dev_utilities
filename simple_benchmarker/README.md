@@ -1,1 +1,0 @@
-**benchmark.sh :** Uses Bash date command to measure the time.
