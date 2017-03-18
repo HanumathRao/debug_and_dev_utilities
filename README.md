@@ -15,4 +15,4 @@ with metadata of target source file.
 
 Detailed blog post : https://nativecoding.wordpress.com/2016/10/25/c-reflection-using-clang/
 
-**multithreaded_stock_quotes ( Python / C# / Powershell ):** It is for querying stock quotes on multicore systems using Yahoo Finance API. It has been implemented seperately in Python (2.7) , C# ( .Net and Mono ) and Powershell.
+**multithreaded_stock_quotes ( Python / C# ):** It is for querying stock quotes on multicore systems using Yahoo Finance API. It has been implemented seperately in Python (2.7) , C# ( .Net and Mono ).

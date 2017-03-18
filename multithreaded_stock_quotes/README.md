@@ -1,4 +1,4 @@
-This is a multithreaded stock quotes querying code. It has been implemented in Python (2.7) , C# and also as a standalone Powershell script which uses C# code.
+This is a multithreaded stock quotes querying code. It has been implemented in Python (2.7) and C# ( .Net for Windows and Mono for Linux ).
 
 **How it works :** They load RIC symbols from a text file and gets the quotes by using Yahoo Finance API. They fire one thread per symbol. Regarding Yahoo Finance api , see section below.
 
@@ -33,8 +33,7 @@ This is a multithreaded stock quotes querying code. It has been implemented in P
 **How to run :** 
 
 		1. Python : Make sure that you use Python 2.7 and then just type : python multithreaded_stock_quotes.py
-		2. Powershell : Double click the multithreaded_stock_quotes.bat file. The script will ask for a symbols file. An example symbols file is provided.
-		3. C# : See instructions at the end of this readme regarding how to build C# project on Linux ( Mono ) and Windows
+		2. C# : See instructions at the end of this readme regarding how to build C# project on Linux ( Mono ) and Windows
 
 **How does Yahoo Finance API work :**
 
