@@ -15,4 +15,7 @@ with metadata of target source file.
 
 Detailed blog post : https://nativecoding.wordpress.com/2016/10/25/c-reflection-using-clang/
 
-**multithreaded_stock_quotes ( Python / C# ):** It is for querying stock quotes on multicore systems using Yahoo Finance API. It has been implemented seperately in Python (2.7) , C# ( .Net and Mono ).
+**pretty_exception ( C++ ):** It is a header only library for GCC and MSVC to throw standard exceptions
+with callstacks and in colour.
+
+Detailed blog post : https://nativecoding.wordpress.com/2016/07/24/c-pretty-exceptions/
