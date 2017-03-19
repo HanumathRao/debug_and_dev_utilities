@@ -1,0 +1,136 @@
+################################################################
+# Coredumps
+ulimit -c unlimited                                     # To enable coredump on the system
+gdb executable_name core_dump_file                      # starting a crash dump session , use up and down arrows to move in the call stack
+################################################################
+#Fundamentals
+gdb executable                                          # start GDB a process
+r                                                       # run the process
+attach pid                                              # attach to a process with process id "pid"
+b function_symbol_name                                  # to place a breakpoint
+n                                                       # for next line
+c                                                       # for continue
+s                                                       # step into
+finish                                                  # go to end of current frame
+ret                                                     # return from function immediately
+q                                                       # quit
+list                                                    # source code line_number shows around of where you are
+info locals                                             # local variables on stack
+info args                                               # arguments passed to the function
+i r                                                     # registers
+info proc                                               # virtual memory-physical memory mappings
+print variable_name                                     # prints variable
+disas function_name                                     # disassembly a function
+disas/s                                                 # disassembly and show source at the same time
+shell command                                           # executes a shell command
+call pow(3,2)                                           # you can call functions and pass arguments with "call"
+print *Array@10                                         # Display 10 items by dereferencing pointer "Array"
+################################################################
+#Callstacks
+backtrace                                               # call stack
+up                                                      # change to upper stack frame
+down                                                    # change to lower stack frame
+################################################################
+#Breakpoints
+info                                                    # breakpoints to list all break points
+b __libc_malloc                                         # place a breakpoint in malloc
+disable 2                                               # removes bp with id 2
+condition bpid (strstr( buf, "Unknown") == 0x00000000)  # puts a condition on bp with id bpid
+save breakpoints myfile.txt                             # saving breakpoints , required GDB version is minimum 7.2
+################################################################
+#Reverse debugging
+#1 Set a bpoint
+b target_function
+#2 Continue to hit it
+c
+#3 Enable recording
+record
+#4 Continue until end
+c
+#5 Reverse stepping
+reverse-stepi
+################################################################
+#GDB Hardware Watchpoints
+show can-use-hw-watchpoints                             # show if we can use watchpoints 
+info watchpoints                                        # lists hadrware watchpoints ( memory breakpoints )
+watch foo                                               # debugger breaks when value of foo changes
+rwatch                                                  # read watch
+wwatch                                                  # write watch
+################################################################
+# Catch Points
+catch throw                                             # hits when any exception thrown
+catch assert                                            # hits when an assertion occurs
+catch signal                                            # hits when a signal received
+catch load/unload                                       # hits when a shared library loaded/unloaded
+catch exec                                              # hits when exec syscall called
+catch syscall <syscall_name>                            # hits when specified syscall called
+################################################################
+# GDB Checkpoints
+checkpoint                                              # Saves a snapshot of debugee
+restart <checkpoint-id>                                 # restores the snapshot state
+################################################################
+# Compiling and injecting C++ code during debugging
+https://sourceware.org/gdb/onlinedocs/gdb/Compiling-and-Injecting-Code.html
+################################################################
+#Threads
+thread apply all bt                                     # apply to all threads , in this case show backtrace of all
+info thread                                             # show all threads including their names
+################################################################
+# GBB Init
+These files contain gdb commands to automatically execute during gdb startup
+################################################################
+# GDB Text User Interface
+ctrl x A    # enters text ui mode
+ctrl L      # repaint
+ctrl x 1    # switch to normal mode(cli mode )
+ctrl x 2    # switch to multi windows mode , asm code , registers etc
+################################################################
+# A simple Bash script that waits until a process starts and then 
+# launches GDB
+#!/bin/sh
+progstr=$1
+progpid=`pgrep -o $progstr`
+while [ "$progpid" = "" ]; do
+  progpid=`pgrep -o $progstr`
+done
+gdb -ex continue -p $progpid
+################################################################
+# GDB Automation with GDB scripts
+source myfile.txt                                       # loads a GDB script
+gdb -batch -ex 'command1' -ex 'command2' ./debugee      # starts GDB in batch mode and executes 2 commands
+#A script that dumps all malloc call information :
+    # set breakpoint pending on used in order to avoid prompt of 
+    # do you want to set a bp for a symbol that will be loaded future
+    set breakpoint pending on
+    b __libc_malloc
+    commands
+    # Display callstack
+    backtrace
+    n
+    # Display size argument passed to malloc
+    print bytes
+    finish
+    finish
+    # Display return value ( address allocated ) of malloc
+    print $rax
+    cont
+    end
+################################################################
+# GDB Automation with built-in Python interpreter
+source myfile.py                                        # loads a Python script
+gdb --command script.py ./executable.elf                # automate gdb with a python script , requires GDB7
+https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
+################################################################
+# Remote GDB setup
+On the machine where the application runs :
+    If gdbserver is not present , copy it over.
+    Start the application.
+    Start gdbserver: gdbserver gdbmachine:2345 --attach program
+
+On gdbmachine:
+    At the gdb prompt, enter: target remote appmachine:2345
+
+    Sometimes you may have to tunnel over ssh:
+    ssh -L 5432:appmachine:2345 user@appmachine
+
+    At the gdb prompt: target remote localhost:5432
