@@ -1,7 +1,5 @@
 <td><img src="https://img.shields.io/badge/LICENCE-PUBLIC%20DOMAIN-green.svg" alt="Licence badge"></td>
 
-===========================================================================
-
 In this repository I will collect various utilities.
 
 **memory_leak_detector ( Python ):** memdump.py is a GDB extension written in Python. It dumps all memory operations done by GNU LibC Runtime ( malloc, realloc, calloc and free),
@@ -19,6 +17,3 @@ Detailed blog post : https://nativecoding.wordpress.com/2016/10/25/c-reflection-
 with callstacks and in colour.
 
 Detailed blog post : https://nativecoding.wordpress.com/2016/07/24/c-pretty-exceptions/
-
-**cheatsheets :** Cheatsheets for GDB and Windbg
-
