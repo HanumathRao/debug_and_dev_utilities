@@ -1,6 +1,6 @@
 Address resolver is a tool that converts function addresses in a given portable executable to function names. The tool requires PDB file.
 
-**UI Tool : **
+**UI Tool :**
 
 <img src="https://github.com/akhin/debug_and_dev_utilities/blob/master/pdb_address_resolver/images/address_resolver_ui.png" align="center">
 
