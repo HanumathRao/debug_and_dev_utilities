@@ -8,8 +8,6 @@ of memdump.py. You can use memleak.sh to detect memory leaks at one go as it cal
 
 Detailed blog post : https://nativecoding.wordpress.com/2016/07/31/gdb-debugging-automation-with-python/
 
-**address_resolver ( C#/Powershell ) : It is a tool that converts function addresses in a given portable executable to function names. The tool requires PDB file.
-
 **cpp_reflection_tool ( Python ) :** It is  simple Python script which uses Clang , in order to create a header file
 with metadata of target source file.
 
@@ -23,3 +21,5 @@ Detailed blog post : https://nativecoding.wordpress.com/2016/07/24/c-pretty-exce
 **windbg_automation_examples ( Windows shell / Javascript ) :** This directory has the code used in "Windbg automation and extensions" blog post :
 
 https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
+
+**pdb_address_resolver ( C#/Powershell ) :** It is a tool that converts function addresses in a given portable executable to function names. The tool requires PDB file.
