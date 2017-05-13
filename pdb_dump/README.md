@@ -1,4 +1,4 @@
-PDB dump is a tool that receives a portable executable as input and it can do one followings :
+PDB dump is a tool that can do the followings for a given portable executable compiled by MSVC :
 
 1. Resolving name of a function using hex address
 
@@ -11,6 +11,7 @@ PDB dump is a tool that receives a portable executable as input and it can do on
 3. Get all PDB items as an object array in Powershell command prompt :
 
 	$items = .\pdb_dump.ps1  -PORTABLE_EXECUTABLE_NAME portable_executable -ACTION get-pdb-items
+	
 	$items 
 
 	ItemName : __glewVertexAttrib2svNV

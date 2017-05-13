@@ -22,4 +22,4 @@ Detailed blog post : https://nativecoding.wordpress.com/2016/07/24/c-pretty-exce
 
 https://nativecoding.wordpress.com/2016/01/10/automate-attach-to-process-on-windows-with-windbg/
 
-**pdb_dump ( Powershell ) :** PDB dump is a tool that receives a portable executable as input and it can find function names from address and dump all PDB information
+**pdb_dump ( Powershell ) :** PDB dump is a tool that can dump all symbol information and can also resolve function name from given addresses for a portable executable compiled by MSVC.

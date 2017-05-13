@@ -341,7 +341,7 @@ function compile_csharp_code()
 "@
     try
     {
-	    Add-Type -TypeDefinition $source;
+        Add-Type -TypeDefinition $source;
     }
     catch {}
 }
@@ -374,11 +374,11 @@ catch
 {
     $e = $_.Exception
     Write-Host $e.Message
-	Write-Host ""
-	Write-Host "Usage to resolve address: pdb_dump.ps1 -PORTABLE_EXECUTABLE_NAME portable_executable -ACTION Resolve-Address -HEX_ADDRESS hex_address"
+    Write-Host ""
+    Write-Host "Usage to resolve address: pdb_dump.ps1 -PORTABLE_EXECUTABLE_NAME portable_executable -ACTION Resolve-Address -HEX_ADDRESS hex_address"
     Write-Host "Usage to get all PDB objects: pdb_dump.ps1 -PORTABLE_EXECUTABLE_NAME portable_executable -ACTION Get-PDB-Items"
     Write-Host "Usage to dump all pdb information to a CSV file : pdb_dump.ps1 -PORTABLE_EXECUTABLE_NAME portable_executable -ACTION Dump-PDB-To-CSV -CSV_FILE target_csv_file"
-	Write-Host ""
+    Write-Host ""
     exit 1
 }
 exit 0
