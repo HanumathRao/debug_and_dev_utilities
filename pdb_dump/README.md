@@ -39,4 +39,4 @@ PDB dump is a tool that receives a portable executable as input and it can do on
 **Troubleshooting address resolving :** If an address can not be found , you will receive an error message with error code 126. In order to troubleshoot it ,
 you can use Microsoft`s Dbgview utility when reproducing the issue . You can troubleshoot by looking at debug traces as below :
 
-<img src="https://github.com/akhin/debug_and_dev_utilities/blob/master/pdb_dump/images/address_resolver_troubleshooting.png" align="center">
+<img src="https://github.com/akhin/debug_and_dev_utilities/blob/master/pdb_dump/images/pdb_dump_troubleshooting.png" align="center">
